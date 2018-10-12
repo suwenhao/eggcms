@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>增加管理员</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" style='padding:15px 0;'>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text"  name="username" required class="layui-input" lay-verify="required" placeholder="请输入管理员用户名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员密码</label>
+                    <div class="layui-input-block">
+                        <input type="password"  name="password" required class="layui-input" lay-verify="required" placeholder="请输入管理员密码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员手机</label>
+                    <div class="layui-input-block">
+                        <input type="phone" id='mobile' name="mobile" class="layui-input" placeholder="请输入管理员手机">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="email" id='email' name="email" class="layui-input" placeholder="请输入管理员邮箱">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员角色</label>
+                    <div class="layui-input-inline">
+                        <select id="role_id" name="role_id" class="newsLook" lay-filter="role_id">
+                            <%for(var i=0;i<roles.length;i++){%>
+                                <option value="<%-roles[i]._id%>"><%-roles[i].title%></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员描述</label>
+                    <div class="layui-input-block">
+                        <textarea name='description' placeholder="请输入管理员描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="addAdmin" class="layui-btn" lay-submit lay-filter="addAdmin">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <a href="<%=adminName%>/manager" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form', 'layer', 'jquery', 'layedit'], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                layedit = layui.layedit,
+                $ = layui.jquery;
+            //自定义验证规则
+            form.verify({
+                username: function(value) {
+                    if(value.length < 3) {
+                        return '至少得3个字符';
+                    }
+                }
+            });
+            //监听提交
+            form.on('submit(addAdmin)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                $('#editAdmin').attr('disabled',true);
+                console.log(data.field)
+                var phone = /^1[34578][0-9]{9}$/;
+                var email = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); 
+                if(data.field.mobile&&!phone.test(data.field.mobile)){
+                    layer.msg('手机号码格式出错');
+                    $('#mobile').focus();
+                    $('#addAdmin').removeAttr('disabled');
+                    return false;
+                }
+                if(data.field.email&&!email.test(data.field.email)){
+                    layer.msg('邮箱格式出错');
+                    $('#email').focus();
+                    $('#addAdmin').removeAttr('disabled');
+                    return false;
+                }
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/manager/doadd',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/manager"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        
+                    },
+                    error:function(err){
+                        $('#addAdmin').removeAttr('disabled');
+                        layer.msg('后台出错');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

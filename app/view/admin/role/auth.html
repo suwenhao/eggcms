@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>角色授权</title>
+	<!-- title -->
+    <% include ../public/page_title.html%>
+	<style>
+		.layui-form-item .layui-form-checkbox[lay-skin=primary]{
+			margin:5px 0;
+		}
+		.ztree *{
+			font-size:15px !important;
+		}
+	</style>
+	<link rel="stylesheet" href="/public/admin/lib/zTree/css/zTreeStyle/zTreeStyle.css">
+</head>
+<body class="main_body">
+	<div class="layui-form news_list">
+		<form class="layui-form" style='padding:15px;'>
+			<div class="layui-form-item">
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th colspan="2"><%=name%></th>
+						</tr>
+						<tr>
+							<th>选择授权</th>
+							<th>已授权</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr style='background-color: transparent !important;'>
+							<td>
+								<div id="treeBox" style='overflow-y: auto;'>
+									<div id="tree" class="ztree"></div>
+								</div>
+
+							</td>
+							<td style="display:inline-block;">
+								<div id="auth"></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="layui-form-item">
+				<button class="layui-btn" lay-submit lay-filter="submit">角色授权</button>
+				<a href="<%=adminName%>/role" class="layui-btn layui-btn-primary">返回</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+	<script type="text/javascript" src="/public/admin/js/index.js"></script>
+	<script src="/public/admin/lib/zTree/js/jquery-1.4.4.min.js"></script>
+    <script src="/public/admin/lib/zTree/js/jquery.ztree.all.min.js"></script>
+	<script>
+		var authobj = {
+			moduleList:JSON.parse('<%-list%>'),
+			//初始化树
+			init:function(){
+				var _this = this;
+				console.log(_this.moduleList)
+				_this.createTree()
+				_this.zTreeOnChange()
+				_this.check()
+				_this.loadLayui()
+				_this.resize();
+			},
+			resize:function(){
+				var h = $(window).height();
+				$("#treeBox").height(h-220)
+				$(window).resize(function(){
+					var h = $(window).height();
+					$("#treeBox").height(h-220)
+				})
+			},
+			//构建树
+			createTree:function(){
+				var _this = this
+				this.zTreeObj = $.fn.zTree.init($("#tree"), {
+					data:{
+						simpleData:{
+							enable: true,
+							idKey:'_id',
+							pIdKey :'pid'
+						}
+					},
+					check:{
+						enable:true,
+						chkboxType:{ "Y": "", "N": "ps" }
+					},
+					callback:{
+						onCheck: this.zTreeOnChange.bind(this),
+						onClick: function (e, treeId, treeNode, clickFlag) { 
+							_this.zTreeObj.checkNode(treeNode, !treeNode.checked, true);
+							_this.zTreeOnChange();
+						} 
+					}
+				}, this.moduleList);
+				
+				//展开全部
+				this.zTreeObj.expandAll(true);
+			},
+			//显示已授权
+			zTreeOnChange:function(){
+				var _this = this
+				layui.use(['element','form'], function() {
+					var form = layui.form;
+					var element = layui.element;
+					var checkauth=_this.zTreeObj.getCheckedNodes(true);
+					$('#auth').html("");
+					html='';
+					for(var i=0;i<checkauth.length;i++){
+						html+='<input data-id="'+checkauth[i]._id+'" type="checkbox" name="" title="'+checkauth[i].name+'" checked/>';
+					}
+					$('#auth').html(html);
+					form.render()
+				});
+			},
+			//选择CheckBox
+			check:function(){
+				var _this = this
+				layui.use(['element','form'], function() {
+					var form = layui.form;
+					form.on('checkbox', function(data) {
+						var id = $(this).attr('data-id');
+						var checked = this.checked;
+						console.log(checked);
+						var node = _this.zTreeObj.getNodeByParam('_id',id);
+						_this.zTreeObj.checkNode(node,checked);
+						_this.zTreeOnChange()
+					})
+				})
+			},
+			//加载layui
+			loadLayui:function(){
+				var _this = this;
+				layui.use(['form','layer','jquery','table'],function(){
+				var form = layui.form,
+					layer =layui.layer,
+					table = layui.table,
+					$ = layui.jquery;
+				//监听提交
+				form.on('submit(submit)', function(data) {
+					data.field._csrf = "<%=csrf%>";
+					data.field.role_id = "<%=id%>";
+					var access_node=[]
+					var checkAuth = _this.zTreeObj.getCheckedNodes(true);
+					for(var i=0;i<checkAuth.length;i++){
+						access_node.push(checkAuth[i]._id);
+					}
+					data.field.access_node=access_node;
+					console.log(data.field)
+					$.ajax({
+						type:'post',
+						data:data.field,
+						dataType:'json',
+						url:'<%=adminName%>/role/doauth',
+						success:function(res){
+							console.log(res);
+							if(res.code===0){
+								layer.msg(res.msg);
+								window.location.href = "<%=adminName%>/role/auth?id="+"<%=id%>"
+							}else{layer.msg(res.msg);}
+						},
+						error:function(err){layer.msg('后台出错');}
+					})
+					return false;
+				})
+			})
+			}
+		}
+		//初始化
+		authobj.init();
+	</script>
+</body>
+</html>

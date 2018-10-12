@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>增加商品类型</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" style='padding:15px 0;'>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型描述</label>
+                    <div class="layui-input-block">
+                        <textarea required name="description" placeholder="类型描述" lay-verify="required" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="addType">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <a href="<%=adminName%>/goodsType" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form','jquery'], function() {
+            var form = layui.form,
+                $ = layui.jquery;
+            //监听提交
+            form.on('submit(addType)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                console.log(data.field)
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/goodsType/doadd',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/goodsType"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        
+                    },
+                    error:function(err){
+                        layer.msg('后台出错');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

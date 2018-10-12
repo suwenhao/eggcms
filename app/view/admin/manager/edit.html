@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>修改管理员</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+        <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" style='padding:15px 0;'>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="<%=list.username%>"  disabled required class="layui-input" lay-verify="required" placeholder="请输入管理员用户名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员密码</label>
+                    <div class="layui-input-block">
+                        <input type="password"  name="password" class="layui-input" placeholder="请输入管理员密码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员手机</label>
+                    <div class="layui-input-block">
+                        <input type="phone" id="mobile" value="<%=list.mobile%>" name="mobile" class="layui-input" placeholder="请输入管理员手机">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="email" id="email" value="<%=list.email%>" name="email" class="layui-input" placeholder="请输入管理员邮箱">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员角色</label>
+                    <div class="layui-input-inline">
+                        <select id="selected" name="role_id" lay-filter="role_id">
+                            <%for(var i=0;i<roles.length;i++){%>
+                                <option value="<%-roles[i]._id%>"><%=roles[i].title%></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" lay-text="开|关" name='status' <%if (list.status==1){%>checked<%}%> name="switch" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员描述</label>
+                    <div class="layui-input-block">
+                        <textarea name='description' placeholder="请输入管理员描述" class="layui-textarea"><%=list.description%></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="editAdmin" class="layui-btn" lay-submit lay-filter="editAdmin">保存修改</button>
+                        <a href="<%=adminName%>/manager" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form', 'layer', 'jquery', 'layedit'], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                layedit = layui.layedit,
+                $ = layui.jquery;
+
+            //设置默认选择
+            $("#selected").find("option[value='<%=list.role_id%>']").prop("selected",true);
+            form.render('select');
+            //监听提交
+            form.on('submit(editAdmin)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                data.field.id = "<%=list._id%>";
+                $('#editAdmin').attr('disabled',true);
+                if(data.field.status){
+                    data.field.status = 1
+                }else{
+                    data.field.status = 0
+                }
+                if(!data.field.password){
+                    delete data.field.password;
+                }
+                var phone = /^1[34578][0-9]{9}$/;
+                var email = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); 
+                if(data.field.mobile&&!phone.test(data.field.mobile)){
+                    layer.msg('手机号码格式出错');
+                    $('#mobile').focus();
+                    $('#editAdmin').removeAttr('disabled');
+                    return false;
+                }
+                if(data.field.email&&!email.test(data.field.email)){
+                    layer.msg('邮箱格式出错');
+                    $('#email').focus();
+                    $('#editAdmin').removeAttr('disabled');
+                    return false;
+                }
+                console.log(data.field)
+                
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/manager/doedit',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/manager"
+                            },1000)
+                        }else{
+                            layer.msg(res.msg);
+                            $('#editAdmin').removeAttr('disabled');
+                        }
+                        
+                    },
+                    error:function(err){
+                        $('#editAdmin').removeAttr('disabled');
+                        layer.msg('后台出错');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

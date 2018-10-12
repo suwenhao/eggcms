@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"webshop.admin"},{"v":2,"unique":true,"key":{"username":1},"name":"username_1","ns":"webshop.admin","background":true}],"uuid":"74b63be5180240a8bca182c4db4ddb60"}

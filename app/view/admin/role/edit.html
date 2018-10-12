@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>修改角色</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" style='padding:15px 0;'>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required class="layui-input newsName" value="<%=list.title%>" lay-verify="required" placeholder="请输入角色名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色描述</label>
+                    <div class="layui-input-block">
+                        <textarea required name="description" placeholder="请输入角色描述" lay-verify="required" class="layui-textarea"><%=list.description%></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" lay-text="开|关" name='status' <%if (list.status==1){%>checked<%}%> name="switch" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="editRole" class="layui-btn" lay-submit lay-filter="editRole">保存修改</button>
+                        <a href="<%=adminName%>/role" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form','jquery'], function() {
+            var form = layui.form,
+                $ = layui.jquery;
+            //自定义验证规则
+            form.verify({
+                title: function(value) {
+                    if(value.length < 3) {
+                        return '至少得3个字符';
+                    }
+                }
+            });
+            //监听提交
+            form.on('submit(editRole)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                data.field._id = "<%=list._id%>";
+                if(data.field.status){
+                    data.field.status=1
+                }else{
+                    data.field.status=0
+                }
+                $('#editRole').attr('disabled',true);
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/role/doedit',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/role"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                            $('#editRole').removeAttr('disabled');
+                        }
+                        
+                    },
+                    error:function(){
+                        layer.msg('后台出错');
+                        $('#editRole').removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

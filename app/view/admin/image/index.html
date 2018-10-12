@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>图片列表</title>
+	<!-- title -->
+	<% include ../public/page_title.html%>
+	<style>
+		.layui-table-cell{
+			height:auto;
+		}
+	</style>
+</head>
+<body class="main_body">
+	<blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+			<button type="button" class="layui-btn" id="upload">
+				<i class="layui-icon">&#xe67c;</i>上传图片
+			</button>
+		</div>
+		<div class="layui-inline">
+			<a class="layui-btn layui-btn-danger all-delete">批量删除</a>
+		</div>
+	</blockquote>
+	<div style="padding:0 10px ;">
+		<div class="layui-form news_list">
+			<table id="table"></table>
+		</div>
+	</div>
+	<script type="text/html" id="btnTpl">
+		<a class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
+	</script>
+	<script type="text/html" id="timeTpl">
+		<div>{{d.time}}</div>
+	</script>
+	<script type="text/html" id="imgTpl">
+		<div><img src="{{d.src}}" alt="" class="img"></div>
+	</script>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+	<script type="text/javascript" src="/public/admin/js/index.js"></script>
+	<script type="text/javascript" src="/public/admin/js/util.js"></script>
+	<script>
+		var ImageObj = {
+			init:function(){
+				this.loadLayui()
+			},
+			imgClick:function(layer){
+				$('.img').on('click',function(){
+					let src = $(this).attr('src');
+					layer.open({
+						area: '600px',
+						title: '图片预览',
+						content: '<img src="'+src+'" width="100%">',
+					}); 
+				})
+			},
+			delete:function(layer,table){
+				$('.delete-btn').on('click',function(){
+					var id = $(this).attr('data-id');
+					// alert(id);
+					layer.confirm('是否删除该图片？',{
+						title:'警告',
+						content:'是否删除该图片？',
+						btn: ['确认', '取消'], //可以无限个按钮
+					}, function(index, layero){
+						var url = '<%=adminName%>/image/delete';
+						var params = {
+							model:'Image',
+							id:id
+						}
+						//删除
+						reqAjax.delete('get', url, params,null,function(){
+							//执行重载
+							table.reload('table', {
+								height: 'full-100',
+								page: {
+									curr: 1 //重新从第 1 页开始
+								},
+							});
+						});
+					}, function(index){console.log('取消删除')});
+				})
+			},
+			allDelete:function(layer,table,$){
+				$('.all-delete').on('click',function(){
+					var checkStatus = table.checkStatus('table')
+					var data=checkStatus.data;
+					if(data.length<1){
+						layer.msg('请选择要删除的图片')
+					}else{
+						layer.confirm('是否批量删除图片？',{
+							title:'警告',
+							content:'是否批量删除图片？',
+							btn: ['确认', '取消'], //可以无限个按钮
+						}, function(index, layero){
+							function dg(i){
+								i++;
+								if(i==data.length){
+									layer.msg('已完成批量删除图片')
+									//执行重载
+									table.reload('table', {
+										height: 'full-100',
+										page: {
+											curr: 1 //重新从第 1 页开始
+										},
+									});								
+									return;
+								}else{
+									$.ajax({
+										type:'get',
+										url:"<%=adminName%>/image/delete",
+										dataType:'json',
+										data:{
+											model:'Image',
+											id:data[i]._id
+										},
+										success:function(res){
+											if(res.code===0){
+												dg(i)
+											}else{
+												layer.msg(res.msg)
+												return;
+											}
+										}
+									})
+								}
+							}
+							dg(-1)
+							
+						}, function(index){console.log('取消删除')});
+					}
+				})
+			},
+			loadLayui:function(){
+				var _this = this
+				layui.use(['form','layer','jquery','table', 'upload'],function(){
+					var form = layui.form,
+						layer =layui.layer,
+						table = layui.table,
+						upload = layui.upload,
+						$ = layui.jquery;
+					//第一个实例
+					var index = layer.load();
+					table.render({
+						elem: '#table',
+						height: 'full-100',
+						url:'<%=adminName%>/image/list?_csrf=<%=csrf%>', //数据接口
+						cols: [[ //表头
+							{type:'checkbox'},
+							{field: '_id', align:'center',width: 200, title: 'ID'},
+							{field: 'src', align:'center',width: 200, title: '图片',templet:'#imgTpl'},
+							{field: 'add_time', align:'center', title: '上传时间',templet:'#timeTpl',},
+							{field: '', title: '操作',align:'center', width: 150,templet:'#btnTpl'},
+						]],
+						limit:10,
+						limits:[10,20,50,100],
+						page: true, //开启分页
+						done:function(){
+							layer.close(index);
+							_this.imgClick(layer);
+							_this.delete(layer,table);
+							_this.allDelete(layer,table,$);
+						}
+					});
+					var uploadInst = upload.render({
+						elem: '#upload', //绑定元素
+						url: "<%=adminName%>/upload?_csrf=<%=csrf%>", //上传接口
+						done: function(res){
+							//上传完毕回调
+							if(res.code===0){
+								layer.msg(res.msg);
+								$('#imgBox').show()
+								let html = '';
+								for(var i=0;i<res.data.length;i++){
+									html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="img_id" value="'+res.data[i]['_id']+'">';
+								}
+								$('#imgs').html(html)
+								$('#imgs').find('img').on('click',function(){
+									let src = $(this).attr('src');
+									layer.open({
+										area: '600px',
+										title: '图片预览',
+										content: '<img src="'+src+'" width="100%">',
+									}); 
+								})
+								//执行重载
+								table.reload('table', {
+									height: 'full-100',
+									page: {
+										curr: 1 //重新从第 1 页开始
+									},
+								});
+							}else{
+								layer.msg(res.msg);
+							}
+						},
+						error: function(){
+						//请求异常回调
+							layer.msg('请求出错');
+						}
+					});
+				})
+			}
+		}
+		ImageObj.init()
+	</script>
+</body>
+</html>

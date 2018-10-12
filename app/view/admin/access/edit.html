@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>修改权限</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+    <link rel="stylesheet" href="/public/admin/lib/zTree/css/zTreeStyle/zTreeStyle.css">
+</head>
+<body class="main_body">
+    <div class="layui-row">
+        <div class="layui-col-md9">
+            <form class="layui-form" style='padding:15px 0;'>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模块名称</label>
+                    <div class="layui-input-block">
+                        <input type="text"  name="module_name" value="<%=access.module_name%>" required class="layui-input" lay-verify="required" placeholder="请输入模块名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">节点类型</label>
+                        <div class="layui-input-inline">
+                            <select id="type" name="type" class="newsLook" lay-filter="type">
+                                <option value="1" <%if(access.type==1){%>selected<%}%>>模块</option>
+                                <option value="2" <%if(access.type==2){%>selected<%}%>>菜单</option>
+                                <option value="3" <%if(access.type==3){%>selected<%}%>>操作</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">所属模块</label>
+                        <div class="layui-input-inline">
+                            <!-- <select id="module_id" name="module_id" class="newsLook" lay-filter="module_id">
+                                <option id='dj' value="0">--顶级模块--</option>
+                                <%for(var i=0;i<moduleList.length;i++){%>
+                                    <option value="<%=moduleList[i]._id%>"><%=moduleList[i].module_name%></option>
+                                <%}%>
+                            </select> -->
+                            <input type="hidden" value="<%=access.module_id%>" id="module_id" name='module_id' value="0">
+                            <input type="text" value="顶级模块" id="module" name="module" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限图标</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="<%=access.icon%>" id='icon' name="icon"  class="layui-input" placeholder="请输入图标class">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单模块</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="<%=access.model%>" id='model' name="model"  class="layui-input" placeholder="请输入菜单模块">
+                    </div>
+                </div>
+                <div class="layui-form-item" id="actionNameBox">
+                    <label class="layui-form-label">操作名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id='action_name' value="<%=access.action_name%>" name="action_name"  class="layui-input" placeholder="请输入操作名称">
+                    </div>
+                </div>
+                <div class="layui-form-item" id="urlBox">
+                    <label class="layui-form-label">操作地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" id='url' value="<%=access.url%>" name="url" class="layui-input"  placeholder="请输入操作地址">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限排序</label>
+                    <div class="layui-input-block">
+                        <input type="text"  id="sort" value="<%=access.sort%>" name="sort" class="layui-input" placeholder="请输入排序">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" lay-text="开|关" name='status' <%if (access.status==1){%>checked<%}%> name="switch" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限描述</label>
+                    <div class="layui-input-block">
+                        <textarea name='description' placeholder="请输入权限描述" class="layui-textarea"><%=access.description%></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="editAccess" class="layui-btn" lay-submit lay-filter="editAccess">立即提交</button>
+                        <a href="<%=adminName%>/access" type="reset" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="tree" class="ztree" style="display:none;padding:20px;"></div>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script src="/public/admin/lib/zTree/js/jquery-1.4.4.min.js"></script>
+    <script src="/public/admin/lib/zTree/js/jquery.ztree.all.min.js"></script>
+    <script>
+        var moduleList = JSON.parse('<%-moduleList%>');
+        var accessAdd={
+            moduleList:{
+                name:'顶级模块',
+                pid:'0',
+                _id:'0',
+                children:moduleList
+            },
+            init:function(){
+                console.log(this.moduleList)
+                this.createTree()
+                this.loadModule()
+                this.openModule()
+                this.laodLayui()
+            },
+            createTree:function(){
+                this.zTreeObj = $.fn.zTree.init($("#tree"), {
+                    data:{
+                        simpleData:{
+                            enable: true,
+                            idKey:'_id',
+                            pIdKey :'pid'
+                        }
+                    }
+                }, this.moduleList);
+                this.zTreeObj.expandAll(true);
+            },
+            changeAccess:function(layer){
+                var _this = this;
+                var node = _this.zTreeObj.getNodeByParam("_id", $('#module_id').val());
+                _this.zTreeObj.selectNode(node);
+                layer.open({
+                    type: 1,
+                    title: '所属模块',
+                    maxmin: true,
+                    area: ['300px', '400px'],
+                    btn: ['确定', '取消'],
+                    content: $('#tree'),
+                    yes: function(index, layero){
+                        var selectNode=_this.zTreeObj.getSelectedNodes();
+                        console.log(selectNode)
+                        if(selectNode.length>0){
+                            $('#module_id').val(selectNode[0]._id);
+                            $('#module').val(selectNode[0].name)
+                        }else{
+                            $('#module_id').val('0')
+                            $('#module').val('顶级模块')
+                        }
+                        layer.close(index)
+                    }
+                    ,btn2: function(index, layero){
+                        return true
+                    }
+                });
+            },
+            loadModule:function(){
+                var _this = this;
+                var node = _this.zTreeObj.getNodeByParam("_id", $('#module_id').val());
+                _this.zTreeObj.selectNode(node);
+                var selectNode=_this.zTreeObj.getSelectedNodes();
+                $('#module').val(selectNode[0].name);
+            },
+            openModule:function(){
+                var _this = this;
+                    $('#module').focus(function(){
+                        $('#module').blur()
+                        layui.use('layer', function() {
+                            var layer = layui.layer;
+                            _this.changeAccess(layer);
+                        })
+                    })
+                },
+            laodLayui:function(){
+                layui.use(['form', 'layer'], function() {
+                    var form = layui.form,
+                        layer = layui.layer;
+                    var typeVal = '<%=access.type%>';
+
+                    if(typeVal==1){
+                        $('#actionNameBox').hide();
+                        $('#urlBox').hide();
+                    }else{
+                        $('#actionNameBox').show();
+                        $('#urlBox').show();
+                    }
+                    form.on('select(type)', function(data){
+                        typeVal = data.value;
+                        if(data.value==2||data.value==3){
+                            $('#actionNameBox').show();
+                            $('#urlBox').show();
+                        }else{
+                            $('#actionNameBox').hide();
+                            $('#urlBox').hide();
+                        }
+                    });
+                    //设置默认选择
+                    // $("#module_id").find("option[value='<%=access.module_id%>']").prop("selected",true);
+                    // form.render('select');
+                    //监听提交
+                    form.on('submit(editAccess)', function(data) {
+                        data.field._csrf = "<%=csrf%>";
+                        data.field.id = "<%=access._id%>";
+                        $('#editAccess').attr('disabled',true);
+                        if(data.field.status){
+                            data.field.status = 1
+                        }else{
+                            data.field.status = 0
+                        }
+                        if(!data.field.sort){
+                            layer.msg('请输入排序');
+                            $('#sort').focus();
+                            $('#editAccess').removeAttr('disabled');
+                            return false;
+                        }
+                        if(typeVal==2||typeVal==3){
+                            if(!data.field.action_name){
+                                layer.msg('请输入操作名称');
+                                $('#action_name').focus();
+                                $('#editAccess').removeAttr('disabled');
+                                return false;
+                            }
+                            if(!data.field.url){
+                                layer.msg('请输入操作地址');
+                                $('#url').focus();
+                                $('#editAccess').removeAttr('disabled');
+                                return false;
+                            }
+                        }
+                        console.log(data.field)
+                        $.ajax({
+                            type:'post',
+                            data:data.field,
+                            dataType:'json',
+                            url:'<%=adminName%>/access/doedit',
+                            success:function(res){
+                                console.log(res);
+                                if(res.code===0){
+                                    layer.msg(res.msg);
+                                    setTimeout(function(){
+                                        window.location.href = "<%=adminName%>/access"
+                                    },1000)
+                                }else{
+                                    layer.msg(res.msg);
+                                    $('#editAccess').removeAttr('disabled');
+                                }
+                            },
+                            error:function(err){
+                                $('#editAccess').removeAttr('disabled');
+                                layer.msg('后台出错');
+                            }
+                        })
+                        return false;
+                    })
+                })
+            }
+        }
+        accessAdd.init()
+        
+    </script>
+</body>
+</html>

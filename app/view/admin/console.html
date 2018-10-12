@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>控制台</title>
+	<!-- title -->
+	<% include ./public/page_title.html%>
+	<style>
+		.panel .panel_icon i{
+			display: inline-block;
+			height:46px;
+		}
+	</style>
+</head>
+<body class="main_body">
+	<div class="panel_box row" style="padding:15px;">
+		<div class="panel col">
+			<a href="javascript:;" data-url="page/message/message.html">
+				<div class="panel_icon">
+					<i class="layui-icon" data-icon="&#xe63a;">&#xe63a;</i>
+				</div>
+				<div class="panel_word newMessage">
+					<span>12</span>
+					<cite>新消息</cite>
+				</div>
+			</a>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="page/user/allUsers.html">
+				<div class="panel_icon" style="background-color:#FF5722;">
+					<i class="iconfont icon-dongtaifensishu" data-icon="icon-dongtaifensishu"></i>
+				</div>
+				<div class="panel_word userAll">
+					<span>13</span>
+					<cite>新增人数</cite>
+				</div>
+			</a>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="page/user/allUsers.html">
+				<div class="panel_icon" style="background-color:#009688;">
+					<i class="layui-icon" data-icon="&#xe613;">&#xe613;</i>
+				</div>
+				<div class="panel_word userAll">
+					<span>34</span>
+					<cite>用户总数</cite>
+				</div>
+			</a>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="page/img/images.html">
+				<div class="panel_icon" style="background-color:#5FB878;">
+					<i class="layui-icon" data-icon="&#xe64a;">&#xe64a;</i>
+				</div>
+				<div class="panel_word imgAll">
+					<span>134</span>
+					<cite>图片总数</cite>
+				</div>
+			</a>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="page/news/newsList.html">
+				<div class="panel_icon" style="background-color:#F7B824;">
+					<i class="iconfont icon-wenben" data-icon="icon-wenben"></i>
+				</div>
+				<div class="panel_word waitNews">
+					<span>12</span>
+					<cite>待审核文章</cite>
+				</div>
+			</a>
+		</div>
+		<div class="panel col max_panel">
+			<a href="javascript:;" data-url="page/news/newsList.html">
+				<div class="panel_icon" style="background-color:#2F4056;">
+					<i class="iconfont icon-text" data-icon="icon-text"></i>
+				</div>
+				<div class="panel_word allNews">
+					<span>5</span>
+					<em>文章总数</em>
+					<cite>文章列表</cite>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="layui-col-md12">
+			<blockquote class="layui-elem-quote title">系统基本参数</blockquote>
+			<table style="margin:0 10px;" class="layui-table">
+				<colgroup>
+					<col width="150">
+					<col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td>当前版本</td>
+						<td class="version">0.1.0</td>
+					</tr>
+					<tr>
+						<td>开发作者</td>
+						<td class="author">苏文濠</td>
+					</tr>
+					<tr>
+						<td>网站首页</td>
+						<td class="homePage">http://localhost:7001/</td>
+					</tr>
+					<tr>
+						<td>服务器环境</td>
+						<td class="server">node.js</td>
+					</tr>
+					<tr>
+						<td>数据库版本</td>
+						<td class="dataBase">mongodb4.x</td>
+					</tr>
+					<tr>
+						<td>最大上传限制</td>
+						<td class="maxUpload">无</td>
+					</tr>
+					<tr>
+						<td>当前用户权限</td>
+						<td class="userRights">
+							<% if(userinfo.is_super==1){%>
+							超级用户
+							<%}else{%>
+							普通用户
+							<%}%>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<blockquote class="layui-elem-quote title">最新文章<i class="iconfont icon-new1"></i></blockquote>
+			<table class="layui-table" lay-skin="line">
+				<colgroup>
+					<col>
+					<col width="110">
+				</colgroup>
+				<tbody class="hot_news"></tbody>
+			</table> 
+		</div>
+	</div>
+	<script>
+		layui.use(['form','layer','jquery','table'],function(){
+			var form = layui.form,
+				layer =layui.layer,
+				table = layui.table,
+				$ = layui.jquery;
+			
+		})
+	</script>
+</body>
+</html>
