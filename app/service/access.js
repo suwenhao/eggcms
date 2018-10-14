@@ -13,6 +13,12 @@ class AccessService extends Service {
         return {code:1,msg:'增加权限失败'}
     }
   }
+  async list(){
+    let list = await this.ctx.model.Access.aggregate([
+        {$match:{}}
+    ]);
+    return list.sort(util.compare);
+  }
   //修改权限
   async edit(newAccess) {
     let res = await this.ctx.model.Access.updateOne({'_id':newAccess.id},newAccess);

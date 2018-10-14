@@ -4,10 +4,14 @@
 	<meta charset="utf-8">
 	<title>权限列表</title>
 	<!-- title -->
-    <% include ../public/page_title.html%>
+	<% include ../public/page_title.html%>
+	<link rel="stylesheet" href="/public/admin/module/treetable-lay/treetable.css">
 	<style>
 		.layui-table td, .layui-table th{
 			padding:4px 15px;
+		}
+		.layui-input.change-btn{
+			height:28px;
 		}
 	</style>
 </head>
@@ -26,187 +30,122 @@
 	<div class="layui-form news_list">
 		<!-- <table id="table"></table> -->
 		<div style="padding:0 10px ;">
-			<div id="tableBox" style='width:100%;min-width: 880px;'>
-				<table class="layui-table">
-					<thead>
-						<tr>
-							<th>模块名称</th>
-							<th>节点类型</th>
-							<th>操作名称</th>
-							<th>操作地址</th>
-							<th>所属模块</th>
-							<th>描述</th>
-							<th>排序</th>
-							<!-- <th>状态</th> -->
-							<th lay-data="{width:180}">操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						<%for(var i=0;i<list.length;i++){%>
-							<tr>
-								<td><%=list[i].module_name%></td>
-								<td>
-									<%if(list[i].type==1){%>
-										模块
-									<%}else if(list[i].type==2){%>
-										菜单
-									<%}else{%>
-										操作
-									<%}%>
-								</td>
-								<td><%=list[i].action_name%></td>
-								<td><%=list[i].url%></td>
-								<td>
-									顶级模块
-								</td>
-								<td><%=list[i].description%></td>
-								<td width='60'>
-									<input type="text" style='width:50px;height:30px;' class="layui-input layui-input-sm change-btn" value="<%=list[i].sort%>" data-id="<%=list[i]._id%>">
-								</td>
-								<!-- <td>
-									<input disabled type="checkbox" name='status' data-id="{{d._id}}" <%if(list[i].status==1){%>checked<%}%> lay-text="开|关" name="switch" lay-skin="switch">
-								</td> -->
-								<td width='120' style='text-align: center;'>
-									<a href="<%=adminName%>/access/edit?id=<%=list[i]._id%>"  class="layui-btn layui-btn-sm" data-id='<%=list[i]._id%>'>编辑</a>
-									<%if(list[i]._id=='5bbc832574786f5ef0fa3c05'){%>
-									<%}else{%>
-									<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='<%=list[i]._id%>'>删除</button>
-									<%}%>
-								</td>
-							</tr>
-							<%for(var j=0;j<list[i].children.length;j++){%>
-								<tr style='padding-left:30px;'>
-									<td>------<%=list[i].children[j].module_name%></td>
-									<td>
-										<%if(list[i].children[j].type==1){%>
-											模块
-										<%}else if(list[i].children[j].type==2){%>
-											菜单
-										<%}else{%>
-											操作
-										<%}%>
-									</td>
-									<td><%=list[i].children[j].action_name%></td>
-									<td><%=list[i].children[j].url%></td>
-									<td>
-										<%=list[i].module_name%>
-									</td>
-									<td><%=list[i].children[j].description%></td>
-									<td width='60'>
-										<input type="text" style='width:50px;height:30px;' class="layui-input layui-input-sm change-btn" data-id="<%=list[i].children[j]._id%>" value="<%=list[i].children[j].sort%>">
-									</td>
-									<!-- <td>
-										<input disabled type="checkbox" name='status' data-id="<%=list[i].children[j]._id%>" <%if(list[i].children[j].status==1){%>checked<%}%> lay-text="开|关" name="switch" lay-skin="switch">
-									</td> -->
-									<td width='120' style='text-align: center;'>
-										<a href="<%=adminName%>/access/edit?id=<%=list[i].children[j]._id%>"  class="layui-btn layui-btn-sm" data-id='<%=list[i].children[j]._id%>'>编辑</a>
-										<%if(list[i].children[j]._id=='5bbc83c64dbd416124c36998'||list[i].children[j]._id=='5bbc84044dbd416124c36999'||list[i].children[j]._id=='5bbcd461daac3d3ba0160bd4'){%>
-										<%}else{%>
-										<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='<%=list[i].children[j]._id%>'>删除</button>
-										<%}%>
-									</td>
-								</tr>
-								<%for(var k=0;k<list[i].children[j].children.length;k++){%>
-									<tr style='padding-left:30px;'>
-										<td>------------<%=list[i].children[j].children[k].module_name%></td>
-										<td>
-											<%if(list[i].children[j].children[k].type==1){%>
-												模块
-											<%}else if(list[i].children[j].children[k].type==2){%>
-												菜单
-											<%}else{%>
-												操作
-											<%}%>
-										</td>
-										<td><%=list[i].children[j].children[k].action_name%></td>
-										<td><%=list[i].children[j].children[k].url%></td>
-										<td>
-											<%=list[i].children[j].module_name%>
-										</td>
-										<td><%=list[i].children[j].children[k].description%></td>
-										<td width='60'>
-											<input type="text" style='width:50px;height:30px;' class="layui-input layui-input-sm change-btn" data-id="<%=list[i].children[j].children[k]._id%>" value="<%=list[i].children[j].children[k].sort%>">
-										</td>
-										<!-- <td>
-											<input disabled type="checkbox" name='status' data-id="<%=list[i].children[j].children[k]._id%>" <%if(list[i].children[j].children[k].status==1){%>checked<%}%> lay-text="开|关" name="switch" lay-skin="switch">
-										</td> -->
-										<td width='120' style='text-align: center;'>
-											<a href="<%=adminName%>/access/edit?id=<%=list[i].children[j].children[k]._id%>"  class="layui-btn layui-btn-sm" data-id='<%=list[i].children[j].children[k]._id%>'>编辑</a>
-											<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='<%=list[i].children[j].children[k]._id%>'>删除</button>	
-										</td>
-									</tr>
-								<%}%>
-							<%}%>
-						<%}%>
-					</tbody>
-				</table>
-			</div>
+			<table id="table" class="layui-table" lay-filter="table"></table>
 		</div>
 	</div>
 	<script type="text/html" id="btnTpl">
-		<a href="<%=adminName%>/manager/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<a href="<%=adminName%>/access/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
 		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
 	</script>
 	<script type="text/html" id="switchTpl">
-		<input disabled type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="开|关" name="switch" lay-skin="switch">
+		<input lay-filter="switchTest" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" name="switch" lay-skin="switch">
+	</script>
+	<script type="text/html" id="typeTpl">
+		{{d.type==1?'<button class="layui-btn layui-btn-sm">模块</button>':d.type==2?'<button class="layui-btn layui-btn-normal layui-btn-sm">菜单</button>':'<button class="layui-btn layui-btn-danger layui-btn-sm">操作</button>'}}
+	</script>
+	<script type="text/html" id="sortTpl">
+		<input style='width:50px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
+	</script>
+	<script type="text/html" id="iconTpl">
+		<i class="layui-icon {{d.icon}}"></i>
 	</script>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
 	<script type="text/javascript" src="/public/admin/js/index.js"></script>
 	<script type="text/javascript" src="/public/admin/js/util.js"></script>
 	<script>
-		layui.use(['form','layer','jquery','table'],function(){
+		layui.config({
+			base:'/public/admin/module/'
+		}).extend({
+        	treetable: 'treetable-lay/treetable'
+    	}).use(['form','layer','jquery','table', 'treetable'],function(){
 			var form = layui.form,
 				layer =layui.layer,
 				table = layui.table,
+				treetable = layui.treetable,
 				$ = layui.jquery;
-			$(window).on('resize',function(){
-				let w = $('#tableBox').width();
-				if(w<880){
-					$('.layui-table').width(1100);
-				}else{
-					$('.layui-table').width('100%');
-				}
-			})
-			//删除操作
-			$('.delete-btn').on('click',function(){
-				var id = $(this).attr('data-id');
-				// alert(id);
-				layer.confirm('是否删除该权限？',{
-					title:'警告',
-					content:'是否删除该权限？',
-					btn: ['确认', '取消'], //可以无限个按钮
-				}, function(index, layero){
-					var url = '<%=adminName%>/access/delete';
-					var params = {
-						model:'Access',
-						id:id
+			var treeResult = JSON.parse('<%-list%>');
+			var renderTable = function () {
+				treetable.render({
+					treeColIndex: 1,
+					treeSpid: "0",
+					height: 'full-100',
+					treeIdName: '_id',
+					treePidName: 'module_id',
+					treeDefaultClose: true,
+					treeLinkage: false,
+					elem: '#table',
+					data: treeResult,
+					page: false,
+					cols: [[
+						{type: 'numbers'},
+						{field: 'module_name', title: '模块名称',width: 200,},
+						{field: 'type', title: '模块', align:'center', templet:'#typeTpl',},
+						{field: 'icon', title: '图标',templet:'#iconTpl',align:'center',width:80,},
+						{field: 'action_name', title: '操作名称'},
+						{field: 'sort', title: '排序', align:'center', templet:'#sortTpl', width: 80,},
+						{field: 'status', align:'center', title: '状态', width: 95, templet:'#switchTpl'},
+						{field: '', fixed:'right', title: '操作', align:'center', templet:'#btnTpl', width: 150,}
+					]],
+					done: function () {
+						//删除操作
+						$('.delete-btn').on('click',function(){
+							var id = $(this).attr('data-id');
+							// alert(id);
+							layer.confirm('是否删除该权限？',{
+								title:'警告',
+								content:'是否删除该权限？',
+								btn: ['确认', '取消'], //可以无限个按钮
+							}, function(index, layero){
+								var url = '<%=adminName%>/access/delete';
+								var params = {
+									model:'Access',
+									id:id
+								}
+								//删除
+								reqAjax.delete('get', url, params, "<%=adminName%>/access");
+
+							}, function(index){console.log('取消删除')});
+						})
+						//修改排序
+						$('.change-btn').on('blur',function(){
+							var id = $(this).attr('data-id');
+							var val = $(this).val();
+							if(val==''){
+								layer.msg('请输入排序');
+								$(this).focus();
+								return;
+							}
+							var url = '<%=adminName%>/access/change';
+							var params = {
+								model:'Access',
+								attr:'sort',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
+						})
+						//状态改变
+					form.on('switch(switchTest)', function(data){
+						var id = $(this).attr('data-id');
+						var val = this.checked;
+						if(val){val=1}else{val=0}
+						var url = '<%=adminName%>/access/change';
+						var params = {
+							model:'Access',
+							attr:'status',
+							value:val,
+							id:id
+						}
+						//改变
+						reqAjax.change('get', url, params)
+					
+					});
 					}
-					//删除
-					reqAjax.delete('get', url, params, "<%=adminName%>/access");
-
-				}, function(index){console.log('取消删除')});
-			})
-			//修改排序
-			$('.change-btn').on('blur',function(){
-				var id = $(this).attr('data-id');
-				var val = $(this).val();
-				if(val==''){
-					layer.msg('请输入排序');
-					$(this).focus();
-					return;
-				}
-				var url = '<%=adminName%>/access/change';
-				var params = {
-					model:'Access',
-					attr:'sort',
-					value:val,
-					id:id
-				}
-				//改变
-				reqAjax.change('get', url, params)
-			})
+				});
+			};
+			renderTable()
 		})
-
 	</script>
 </body>
 </html>

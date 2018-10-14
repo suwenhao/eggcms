@@ -8,11 +8,8 @@ function navBar(strData){
 	var ulHtml = '<ul class="layui-nav layui-nav-tree">';
 	for(var i=0;i<data.length;i++){
 		if(data[i].checked){
-			if(data[i].spread){
-				ulHtml += '<li data-_id="'+data[i]._id+'" class="layui-nav-item layui-nav-itemed">';
-			}else{
-				ulHtml += '<li data-_id="'+data[i]._id+'" class="layui-nav-item">';
-			}
+		if(data[i].status==1){
+			ulHtml += '<li data-_id="'+data[i]._id+'" class="layui-nav-item">';
 			if(data[i].children != undefined && data[i].children.length > 0){
 				
 				ulHtml += '<a href="javascript:;">';
@@ -25,6 +22,7 @@ function navBar(strData){
 				ulHtml += '<dl class="layui-nav-child">';
 				for(var j=0;j<data[i].children.length;j++){
 					if(data[i].children[j].checked){
+					if(data[i].children[j].status==1){
 						if(data[i].children[j].target == "_blank"){
 							ulHtml += '<dd><a data-_id="'+data[i].children[j]._id+'" href="javascript:;" data-url="'+data[i].children[j].href+'" target="'+data[i].children[j].target+'">';
 						}else{
@@ -34,6 +32,7 @@ function navBar(strData){
 							ulHtml += '<i class="layui-icon '+data[i].children[j].icon+'" data-icon="'+data[i].children[j].icon+'"></i>';
 						}
 						ulHtml += '<cite>'+data[i].children[j].title+'</cite></a></dd>';
+					}
 					}
 				}
 				ulHtml += "</dl>";
@@ -51,6 +50,7 @@ function navBar(strData){
 				}
 			}
 			ulHtml += '</li>';
+		}
 		}
 	}
 	ulHtml += '</ul>';

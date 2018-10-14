@@ -44,7 +44,7 @@ module.exports = app => {
   app.router.get(app.adminName()+'/focus/change',app.controller.admin.focus.change);
   //图片管理
   app.router.get(app.adminName()+'/image',app.controller.admin.image.index);
-  app.router.get(app.adminName()+'/image/list',app.controller.admin.image.list);
+  app.router.post(app.adminName()+'/image',app.controller.admin.image.list);
   app.router.get(app.adminName()+'/image/delete',app.controller.admin.image.delete);
    //商品类型
    app.router.get(app.adminName()+'/goodsType',app.controller.admin.goodsType.index);

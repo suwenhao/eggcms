@@ -23,9 +23,9 @@ const map = (list)=>{
 }
 class AccessController extends Controller {
     async index() {
-        let list = await this.service.access.getAccessList();
+        let list = await this.service.access.list();
         await this.ctx.render('admin/access/index',{
-            list:list
+            list:JSON.stringify(list)
         });
     }
     async add() {

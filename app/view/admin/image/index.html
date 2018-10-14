@@ -145,7 +145,8 @@
 					table.render({
 						elem: '#table',
 						height: 'full-100',
-						url:'<%=adminName%>/image/list?_csrf=<%=csrf%>', //数据接口
+						method:'post',
+						url:'<%=adminName%>/image?_csrf=<%=csrf%>', //数据接口
 						cols: [[ //表头
 							{type:'checkbox'},
 							{field: '_id', align:'center',width: 200, title: 'ID'},

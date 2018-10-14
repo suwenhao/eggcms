@@ -8,7 +8,7 @@ class ImageController extends Controller {
     await this.ctx.render('admin/image/index');
   }
   async list() {
-    let query = this.ctx.request.query;
+    let query = this.ctx.request.body;
     try {
       let res = await this.service.image.list(query);
       // console.log(res.list)
