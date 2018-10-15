@@ -112,20 +112,20 @@ class ToolsService extends Service {
         if(accessUrlId){
         if(accessArr.indexOf(accessUrlId._id.toString())!=-1){
             return {
-            auth:true,
-            type:accessUrlId.type,
+                auth:true,
+                type:accessUrlId.type,
             };
         }else{
             return {
-            auth:false,
-            type:accessUrlId.type,
+                auth:false,
+                type:accessUrlId.type,
             };
         }
         }else{
-        return {
-            auth:false,
-            type:2,
-        };
+            return {
+                auth:false,
+                type:2,
+            };
         }
     }
     //获取显示菜单
@@ -136,7 +136,7 @@ class ToolsService extends Service {
         let accessArr = [];
         //当前角色可访问的列表
         accessResult.forEach(v=>{
-        accessArr.push(v.access_id.toString());
+            accessArr.push(v.access_id.toString());
         })
         let is_super = this.ctx.session.userinfo.is_super;
         if(is_super==1){
@@ -144,46 +144,41 @@ class ToolsService extends Service {
                 item.checked=true;
                 item.title = item.module_name;
                 item.href = item.url;
-                item.spread = false;
                 item.children.forEach(jtem=>{
                     jtem.urlArr = jtem.url.substring(1).split('/');
                     jtem.checked=true;
                     jtem.title = jtem.module_name;
                     jtem.href = jtem.url;
-                    jtem.spread = false;
                 })
                 // item.children=item.items;
             })
         }else{
-        list.forEach(item=>{
-            if(accessArr.indexOf(item._id.toString())!=-1){
-            item.checked=true;
-            }else{
-            item.checked=false;
-            }
-            item.title = item.module_name;
-            item.href = item.url;
-            item.spread = false;
-            item.children.forEach(jtem=>{
-                jtem.urlArr = jtem.url.substring(1).split('/');
-                if(accessArr.indexOf(jtem._id.toString())!=-1&&jtem.type!=3){
-                    jtem.checked=true;
+            list.forEach(item=>{
+                if(accessArr.indexOf(item._id.toString())!=-1){
+                item.checked=true;
                 }else{
-                    jtem.checked=false;
+                item.checked=false;
                 }
-                jtem.title = jtem.module_name;
-                jtem.href = jtem.url;
-                jtem.spread = false;
+                item.title = item.module_name;
+                item.href = item.url;
+                item.children.forEach(jtem=>{
+                    jtem.urlArr = jtem.url.substring(1).split('/');
+                    if(accessArr.indexOf(jtem._id.toString())!=-1&&jtem.type!=3){
+                        jtem.checked=true;
+                    }else{
+                        jtem.checked=false;
+                    }
+                    jtem.title = jtem.module_name;
+                    jtem.href = jtem.url;
+                })
             })
-            // item.children=item.items;
-        })
         }
         list.unshift({
-        title:'控制台',
-        href:this.app.adminName()+'/console',
-        icon:'layui-icon-console',
-        spread:true,
-        checked:true
+            title:'控制台',
+            href:this.app.adminName()+'/console',
+            icon:'layui-icon-console',
+            status:1,
+            checked:true,
         })
         return list;
     }

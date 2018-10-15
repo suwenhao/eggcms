@@ -79,7 +79,8 @@ class RoleController extends Controller {
     async auth() {
         let id = this.ctx.request.query.id;
         let name = this.ctx.request.query.name||'';
-        let list = await this.service.access.getAccessList();
+        // let list = await this.service.access.getAccessList();
+        let list = await this.service.access.list();
         let roleAccess=await this.service.role.getRoleAccessList(id);
         console.log('---验证参数---')
         // console.log(roleAccess)
@@ -95,36 +96,14 @@ class RoleController extends Controller {
             })
             list.forEach(item=>{
                 let name = item.type==1?'模块':item.type==2?'菜单':'操作';
-                item.name= name + '--' + item.module_name;
-                delete item.icon;
-                delete item.url;
+                item.name = name + '--' + item.module_name;
+                // delete item.icon;
+                // delete item.url;
                 if(roleAccess.indexOf(item._id.toString())!=-1){
-                    item.checked=true;
+                    item.LAY_CHECKED=true;
                 }else{
-                    item.checked=false;
+                    item.LAY_CHECKED=false;
                 }
-                item.children.forEach(jtem=>{
-                    let name = jtem.type==1?'模块':jtem.type==2?'菜单':'操作'
-                    jtem.name=name + '--' + jtem.module_name;
-                    delete jtem.icon;
-                    delete jtem.url;
-                    if(roleAccess.indexOf(jtem._id.toString())!=-1){
-                        jtem.checked=true;
-                    }else{
-                        jtem.checked=false;
-                    }
-                    jtem.children.forEach(ktem=>{
-                        let name = ktem.type==1?'模块':ktem.type==2?'菜单':'操作'
-                        ktem.name=name + '--' + ktem.module_name;
-                        delete ktem.icon;
-                        delete ktem.url;
-                        if(roleAccess.indexOf(ktem._id.toString())!=-1){
-                            ktem.checked=true;
-                        }else{
-                            ktem.checked=false;
-                        }
-                    })
-                })
             })
             // console.log(list)
             await this.ctx.render('admin/role/auth',{
@@ -137,7 +116,7 @@ class RoleController extends Controller {
     async doAuth() {
         let role_id = this.ctx.request.body.role_id;
         let access_node = this.ctx.request.body.access_node;
-        console.log(this.ctx.request.body)
+        // console.log(this.ctx.request.body)
         //先清除改角色所有权限
         await this.ctx.model.RoleAccess.deleteMany({"role_id":role_id});
         for(let i=0;i<access_node.length;i++){

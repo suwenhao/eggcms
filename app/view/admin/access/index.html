@@ -71,10 +71,11 @@
 					height: 'full-100',
 					treeIdName: '_id',
 					treePidName: 'module_id',
-					treeDefaultClose: true,
-					treeLinkage: false,
+					treeDefaultClose: false,
+					treeLinkage: true,
 					elem: '#table',
 					data: treeResult,
+					limits:[1000],
 					page: false,
 					cols: [[
 						{type: 'numbers'},
