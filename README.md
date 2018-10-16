@@ -27,6 +27,7 @@ $ npm i
 $ npm run dev
 $ open http://localhost:7001/ad/login
 ```
+测试账号 admin 密码 123456
 
 ### Deploy
 
