@@ -2,7 +2,7 @@
 
 商城管理
 
-## QuickStart
+## 开始
 
 <!-- add docs here for user -->
 
@@ -20,7 +20,7 @@ see [egg docs][egg] for more detail.
     - 在config文件夹里的config.default.js文件，修改对应你的mongodb地址
     - 有用户名的话使用用户名，没的话就直链
 
-### Development
+### 测试环境
 
 ```bash
 $ npm i
@@ -29,7 +29,7 @@ $ open http://localhost:7001/ad/login
 ```
 测试账号 admin 密码 123456
 
-### Deploy
+### 生产环境
 
 ```bash
 $ npm start
