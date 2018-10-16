@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"webshop.role_access"}],"uuid":"ac7c2b71c68641dfa4d59ae959196259"}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"eggcms.role_access"},{"v":2,"key":{"_id":1,"access_id":1,"role_id":1},"name":"_id_1_access_id_1_role_id_1","ns":"eggcms.role_access"}],"uuid":"a8f10672e8f04fa8962ece2da3651912"}

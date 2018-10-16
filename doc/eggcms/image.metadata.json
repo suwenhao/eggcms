@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"webshop.image"}],"uuid":"3bd62cbe6f1b4af79f4959df97b76624"}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"eggcms.image"}],"uuid":"b9531a6fab8940b78c767b0631d57afd"}

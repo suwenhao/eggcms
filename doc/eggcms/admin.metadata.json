@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"webshop.admin"},{"v":2,"unique":true,"key":{"username":1},"name":"username_1","ns":"webshop.admin","background":true}],"uuid":"74b63be5180240a8bca182c4db4ddb60"}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"eggcms.admin"},{"v":2,"unique":true,"key":{"username":1},"name":"username_1","ns":"eggcms.admin","background":true}],"uuid":"d4e0302080e648da85ad172ba4ea1f21"}

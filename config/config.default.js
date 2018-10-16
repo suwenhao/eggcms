@@ -6,7 +6,7 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1538831581362_5358';
 
-  // add your config here
+  // 中间件
   config.middleware = ['jsonp', 'compress', 'common', 'adminAuth'];
   //后台路由中间件
   config['adminAuth']={
@@ -37,11 +37,12 @@ module.exports = appInfo => {
   //mongoose
   config.mongoose = {
     client: {
-      url: 'mongodb://eggadmin:123456@localhost:27017/eggcms',
-      options: {useNewUrlParser:true,useCreateIndex:true,},
+      // url: 'mongodb://localhost:27017/eggcms', //无数据库名和密码
+      url: 'mongodb://eggadmin:123456@localhost:27017/eggcms', //有数据库名和密码
+      options: {useNewUrlParser:true,useCreateIndex:true,}, //mongodb4.0需要的设置
     },
   };
-  config.api = 'http://www.phonegap100.com/'
-  config.uploadDir = 'app/public/admin/upload';
+  config.api = 'http://www.phonegap100.com/';
+  config.uploadDir = 'app/public/admin/upload'; //文件上传的目录
   return config;
 };
