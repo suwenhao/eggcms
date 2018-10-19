@@ -1,6 +1,25 @@
 # eggcms
 
-商城管理
+egg开发RBAC商城权限管理，还在持续开发中
+
+<img src="./doc/1.png" width="900">
+<img src="./doc/2.png" width="900">
+<img src="./doc/3.png" width="900">
+<img src="./doc/4.png" width="900">
+<img src="./doc/5.png" width="900">
+<img src="./doc/6.png" width="900">
+<img src="./doc/7.png" width="900">
+<img src="./doc/8.png" width="900">
+<img src="./doc/9.png" width="900">
+<img src="./doc/10.png" width="900">
+<img src="./doc/11.png" width="900">
+<img src="./doc/12.png" width="900">
+<img src="./doc/13.png" width="900">
+<img src="./doc/14.png" width="900">
+<img src="./doc/15.png" width="900">
+<img src="./doc/16.png" width="900">
+<img src="./doc/17.png" width="900">
+<img src="./doc/18.png" width="900">
 
 ## 开始
 
