@@ -25,7 +25,6 @@ egg开发RBAC商城权限管理，还在持续开发中
 
 <!-- add docs here for user -->
 
-see [egg docs][egg] for more detail.
 启动项目前先导入数据库
 - 导入数据库
     - 安装mongodb 
@@ -54,12 +53,3 @@ $ open http://localhost:7001/ad/login
 $ npm start
 $ npm stop
 ```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
-
-
-[egg]: https://eggjs.org
