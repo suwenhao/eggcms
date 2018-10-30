@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>增加轮播图</title>
+	<title>增加商品分类</title>
     <!-- title -->
     <% include ../public/page_title.html%>
 </head>
@@ -11,29 +11,24 @@
         <div class="layui-col-md9">
             <form class="layui-form" style='padding:15px 0;'>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">分类</label>
-                    <div class="layui-input-inline">
-                        <select id="type" name="type" class="newsLook" lay-filter="type">
-                            <option value="1">网站</option>
-                            <option value="2">APP</option>
-                            <option value="3">小程序</option>
+                    <label class="layui-form-label">分类名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="输入分类名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上级分类</label>
+                    <div class="layui-input-block">
+                        <select name="pid" lay-verify="required" lay-filter="pid">
+                            <option value="0">顶级分类</option>
+                            <%for(var i=0;i<list.length;i++){%>
+                                <option value="<%=list[i]._id%>"><%=list[i].title%></option>
+                            <%}%>
                         </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="title" placeholder="请输入名称" required class="layui-input" lay-verify="required">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">跳转地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="link" placeholder="请输入跳转地址" required class="layui-input" lay-verify="required" >
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">上传图片</label>
+                    <label class="layui-form-label">分类图片</label>
                     <div class="layui-input-block">
                         <button type="button" class="layui-btn" id="upload">
                             <i class="layui-icon">&#xe67c;</i>上传图片
@@ -47,9 +42,45 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <label class="layui-form-label">筛选属性</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="filter_attr" class="layui-input" placeholder="输入筛选属性名称">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">跳转地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="link" class="layui-input" placeholder="输入跳转地址">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类模板</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="template" class="layui-input" placeholder="空代表默认">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Seo标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sub_title" class="layui-input" placeholder="输入Seo标题">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Seo关键词</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keywords" class="layui-input" placeholder="输入Seo关键词">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Seo描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="description" placeholder="Seo描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-block">
-                        <input required name="sort" placeholder="请输入排序" lay-verify="required" class="layui-input"/>
+                        <input type="text" name="sort" class="layui-input" placeholder="排序">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -58,29 +89,30 @@
                         <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
                     </div>
                 </div>
+                
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="addFocus">立即提交</button>
+                        <button class="layui-btn" lay-submit lay-filter="addCate">立即提交</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        <a href="<%=adminName%>/focus" class="layui-btn layui-btn-primary">返回</a>
+                        <a href="<%=adminName%>/goodsCate" class="layui-btn layui-btn-primary">返回</a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
     <script type="text/javascript" src="/public/admin/js/index.js"></script>
     <script>
-         layui.use(['form','jquery', 'upload'], function() {
+         layui.use(['form', 'jquery', 'upload'], function() {
             var form = layui.form,
-                $ = layui.jquery;
-            var upload = layui.upload;
-            $('#imgBox').hide()
+                $ = layui.jquery,
+                upload = layui.upload;
+            
+            $('#imgBox').hide();
             //上传图片
             var uploadInst = upload.render({
                 elem: '#upload', //绑定元素
-                url: "<%=adminName%>/upload?_csrf=<%=csrf%>", //上传接口
+                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true", //上传接口
                 done: function(res){
                     //上传完毕回调
                     if(res.code===0){
@@ -88,7 +120,7 @@
                         $('#imgBox').show()
                         var html = '';
                         for(var i=0;i<res.data.length;i++){
-                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="img_id" value="'+res.data[i]['_id']+'">';
+                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="cate_img" value="'+res.data[i]['file']+'">';
                         }
                         $('#imgs').html(html)
                         $('#imgs').find('img').on('click',function(){
@@ -118,29 +150,30 @@
             });
 
             //监听提交
-            form.on('submit(addFocus)', function(data) {
+            form.on('submit(addCate)', function(data) {
                 data.field._csrf = "<%=csrf%>";
+                console.log(data.field)
                 if(data.field.status){
                     data.field.status = 1
                 }else{
                     data.field.status = 0
                 }
-                if(!data.field.img_id){
-                    layer.msg('请选择图片');
-                    return false;
+                if(!data.field.cate_img){
+                    // layer.msg('请上传分类图片');
+                    // return false;
+                    data.field.cate_img = ""
                 }
-                console.log(data.field)
                 $.ajax({
                     type:'post',
                     data:data.field,
                     dataType:'json',
-                    url:'<%=adminName%>/focus/doadd',
+                    url:'<%=adminName%>/goodsCate/doadd',
                     success:function(res){
                         console.log(res);
                         if(res.code===0){
                             layer.msg(res.msg);
                             setTimeout(function(){
-                                window.location.href = "<%=adminName%>/focus"
+                                window.location.href = "<%=adminName%>/goodsCate"
                             },500)
                         }else{
                             layer.msg(res.msg);

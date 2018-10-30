@@ -2,52 +2,41 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>权限列表</title>
+	<title>商品分类列表</title>
 	<!-- title -->
 	<% include ../public/page_title.html%>
-	<link rel="stylesheet" href="/public/admin/module/treetable-lay/treetable.css">
 	<style>
-		.layui-table td, .layui-table th{
-			padding:4px 15px;
+		h4{
+			font-weight: bold;
 		}
-		.layui-input.change-btn{
-			height:28px;
+		.layui-table-cell{
+			height:auto;
 		}
 	</style>
 </head>
 <body class="main_body">
 	<blockquote class="layui-elem-quote news_search">
-		<!-- <div class="layui-inline">
-			<div class="layui-input-inline">
-				<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
-			</div>
-			<a class="layui-btn search_btn">查询</a>
-		</div> -->
 		<div class="layui-inline">
-			<a href="<%=adminName%>/access/add" class="layui-btn layui-btn-normal newsAdd_btn">增加权限</a>
+			<a href="<%=adminName%>/goodsCate/add" class="layui-btn layui-btn-normal newsAdd_btn">添加商品分类</a>
 		</div>
 	</blockquote>
-	<div class="layui-form news_list">
-		<!-- <table id="table"></table> -->
-		<div style="padding:0 10px ;">
-			<table id="table" class="layui-table" lay-filter="table"></table>
+	<div style="padding:0 10px ;">
+		<div class="layui-form news_list">
+			<table id="table"></table>
 		</div>
 	</div>
 	<script type="text/html" id="btnTpl">
-		<a href="<%=adminName%>/access/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<a href="<%=adminName%>/goodsCate/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
 		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
 	</script>
 	<script type="text/html" id="switchTpl">
 		<input lay-filter="switchTest" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" name="switch" lay-skin="switch">
 	</script>
-	<script type="text/html" id="typeTpl">
-		{{d.type==1?'<button class="layui-btn layui-btn-sm">模块</button>':d.type==2?'<button class="layui-btn layui-btn-normal layui-btn-sm">菜单</button>':'<button class="layui-btn layui-btn-danger layui-btn-sm">操作</button>'}}
-	</script>
 	<script type="text/html" id="sortTpl">
-		<input style='width:50px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
+		<input style='width:50px;height:26px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
 	</script>
-	<script type="text/html" id="iconTpl">
-		<i class="layui-icon {{d.icon}}"></i>
+	<script type="text/html" id="imgTpl">
+		<img width='60' src='{{d.cate_img}}' class='img'/>
 	</script>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
 	<script type="text/javascript" src="/public/admin/js/index.js"></script>
@@ -63,47 +52,46 @@
 				table = layui.table,
 				treetable = layui.treetable,
 				$ = layui.jquery;
-			var treeResult = JSON.parse('<%-list%>');
+
+			var treeResult =JSON.parse('<%-list%>');
 			var renderTable = function () {
 				treetable.render({
 					treeColIndex: 1,
 					treeSpid: "0",
 					height: 'full-100',
 					treeIdName: '_id',
-					treePidName: 'module_id',
+					treePidName: 'pid',
 					treeDefaultClose: false,
 					treeLinkage: true,
 					elem: '#table',
 					data: treeResult,
 					limits:[1000],
 					page: false,
-					cols: [[
+					cols: [[ //表头
 						{type: 'numbers'},
-						{field: 'module_name', title: '模块名称',width: 200,},
-						{field: 'type', title: '模块', align:'center', templet:'#typeTpl',},
-						{field: 'icon', title: '图标',templet:'#iconTpl',align:'center',width:80,},
-						{field: 'action_name', title: '操作名称'},
-						{field: 'sort', title: '排序', align:'center', templet:'#sortTpl', width: 80,},
-						{field: 'status', align:'center', title: '状态', width: 95, templet:'#switchTpl'},
-						{field: '', fixed:'right', title: '操作', align:'center', templet:'#btnTpl', width: 150,}
+						{field: 'title', title: '分类名称',},
+						{field: 'img', align:'center', title: '分类图片',templet:'#imgTpl'},
+						{field: 'sort',align:'center', title: '排序',templet:'#sortTpl'},
+						{field: 'status', title: '状态', width: 95, templet:'#switchTpl'},
+						{field: '', title: '操作',align:'center', width: 150, fixed: 'right',templet:'#btnTpl'},
 					]],
 					done: function () {
 						//删除操作
 						$('.delete-btn').on('click',function(){
 							var id = $(this).attr('data-id');
 							// alert(id);
-							layer.confirm('是否删除该权限？',{
+							layer.confirm('是否删除该分类？',{
 								title:'警告',
-								content:'是否删除该权限？',
+								content:'是否删除该分类？',
 								btn: ['确认', '取消'], //可以无限个按钮
 							}, function(index, layero){
-								var url = '<%=adminName%>/access/delete';
+								var url = '<%=adminName%>/goodsCate/delete';
 								var params = {
-									model:'Access',
+									model:'GoodsCate',
 									id:id
 								}
 								//删除
-								reqAjax.delete('get', url, params, "<%=adminName%>/access");
+								reqAjax.delete('get', url, params, "<%=adminName%>/goodsCate");
 
 							}, function(index){console.log('取消删除')});
 						})
@@ -120,9 +108,9 @@
 								$(this).focus();
 								return;
 							}
-							var url = '<%=adminName%>/access/change';
+							var url = '<%=adminName%>/goodsCate/change';
 							var params = {
-								model:'Access',
+								model:'GoodsCate',
 								attr:'sort',
 								value:val,
 								id:id
@@ -135,21 +123,31 @@
 							var id = $(this).attr('data-id');
 							var val = this.checked;
 							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/access/change';
+							var url = '<%=adminName%>/goodsCate/change';
 							var params = {
-								model:'Access',
+								model:'GoodsCate',
 								attr:'status',
 								value:val,
 								id:id
 							}
 							//改变
 							reqAjax.change('get', url, params)
+						
 						});
+						$('.img').on('click',function(){
+							var src = $(this).attr('src');
+							layer.open({
+								area: '400px',
+								title: '图片预览',
+								content: '<img src="'+src+'" width="100%">',
+							}); 
+						})
 					}
 				});
 			};
 			renderTable()
 		})
+
 	</script>
 </body>
 </html>

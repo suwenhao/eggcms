@@ -8,6 +8,7 @@
     "egg-mongoose": "^3.1.0",
     "egg-scripts": "^2.5.0",
     "egg-view-ejs": "^2.0.0",
+    "jimp": "^0.5.6",
     "koa-compress": "^3.0.0",
     "koa-jsonp": "^2.0.2",
     "md5": "^2.2.1",

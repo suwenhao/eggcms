@@ -56,7 +56,7 @@
 				layer =layui.layer,
 				table = layui.table,
 				$ = layui.jquery;
-			let data =JSON.parse('<%-list%>');
+			var data =JSON.parse('<%-list%>');
 			//第一个实例
 			table.render({
 				elem: '#table',
@@ -119,6 +119,10 @@
 							layer.msg('请输入排序');
 							$(this).focus();
 							return;
+						}else if(isNaN(val)){
+							layer.msg('不是数字');
+							$(this).focus();
+							return;
 						}
 						var url = '<%=adminName%>/focus/change';
 						var params = {
@@ -132,9 +136,17 @@
 						
 					});
 					$('.img').on('click',function(){
-						let src = $(this).attr('src');
+						var src = $(this).attr('src');
+						var h = $(this).height();
+						var w = $(this).width();
+						var area = '500px';
+						if(h>w){
+							area = '400px';
+						}else if(h<w){
+							area = '700px';
+						}
 						layer.open({
-							area: '600px',
+							area: area,
 							title: '图片预览',
 							content: '<img src="'+src+'" width="100%">',
 						}); 

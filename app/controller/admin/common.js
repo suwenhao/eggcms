@@ -3,6 +3,8 @@
 const BaseController = require('../../core/base.js');
 const fs = require('fs');
 const pump = require('mz-modules/pump');
+const Jimp = require('jimp');
+const path = require('path');
 
 class IndexController extends BaseController {
     async login() {
@@ -49,6 +51,7 @@ class IndexController extends BaseController {
     }
     async upload(){
         let parts = this.ctx.multipart({autoFields:true});
+        let flag = this.ctx.request.query.jimp;
         let stream;
         let files=[];
         while((stream = await parts()) != null){
@@ -57,7 +60,8 @@ class IndexController extends BaseController {
             }
             let fieldname = stream.fieldname;
             let dir = await this.service.tools.getUploadFile(stream.filename);
-            let writeStream = fs.createWriteStream(dir.uploadDir);
+            let target = dir.uploadDir;
+            let writeStream = fs.createWriteStream(target);
             try {
                 await pump(stream,writeStream)
             } catch (error) {
@@ -69,13 +73,36 @@ class IndexController extends BaseController {
                 return;
             }
             
-            let res = await this.ctx.model.Image.create({
-                src:dir.saveDir
-            })
-            files.push({
-                [fieldname]:dir.saveDir,
-                _id:res._id
-            })
+            if(flag){
+                let pathsrc = dir.saveDir + '_200x200'+path.extname(dir.saveDir);
+                Jimp.read(target, (err, lenna) => {
+                    if (err) throw err;
+                    lenna
+                    .resize(200, 200) // resize
+                    .quality(60) // set JPEG quality
+                    .write(target + '_200x200'+path.extname(target)); // save
+                })
+                //原图
+                await this.ctx.model.Image.create({
+                    src:dir.saveDir
+                })
+                //缩略图
+                let res = await this.ctx.model.Image.create({
+                    src:pathsrc
+                })
+                files.push({
+                    [fieldname]:pathsrc,
+                    _id:res._id
+                })
+            }else{
+                let res = await this.ctx.model.Image.create({
+                    src:dir.saveDir
+                })
+                files.push({
+                    [fieldname]:dir.saveDir,
+                    _id:res._id
+                })
+            }
         }
         this.ctx.body = {
             code:0,

@@ -21,6 +21,9 @@
 		<div class="layui-inline">
 			<a class="layui-btn layui-btn-danger all-delete">批量删除</a>
 		</div>
+		<div class="layui-inline">
+			<a class="layui-btn" id="reload">刷新</a>
+		</div>
 	</blockquote>
 	<div style="padding:0 10px ;">
 		<div class="layui-form news_list">
@@ -47,9 +50,17 @@
 			},
 			imgClick:function(layer){
 				$('.img').on('click',function(){
-					let src = $(this).attr('src');
+					var src = $(this).attr('src');
+					var h = $(this).height();
+					var w = $(this).width();
+					var area = '500px';
+					if(h>w){
+						area = '400px';
+					}else if(h<w){
+						area = '700px';
+					}
 					layer.open({
-						area: '600px',
+						area: area,
 						title: '图片预览',
 						content: '<img src="'+src+'" width="100%">',
 					}); 
@@ -201,6 +212,15 @@
 							layer.msg('请求出错');
 						}
 					});
+					$('#reload').on('click',function(){
+						//执行重载
+						table.reload('table', {
+							height: 'full-100',
+							page: {
+								curr: 1 //重新从第 1 页开始
+							},
+						});
+					})
 				})
 			}
 		}

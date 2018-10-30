@@ -19,7 +19,7 @@ class GoodsTypeAttributeService extends Service {
         return res;
     }
     async add(newType){
-    let res = await this.ctx.model.GoodsTypeAttribute.create(newType);
+        let res = await this.ctx.model.GoodsTypeAttribute.create(newType);
         if(res){
             return {code:0,msg:'增加成功'}
         }else{

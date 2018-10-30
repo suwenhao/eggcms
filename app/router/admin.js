@@ -62,4 +62,12 @@ module.exports = app => {
    app.router.post(app.adminName()+'/goodsTypeAttribute/doedit',app.controller.admin.goodsTypeAttribute.doEdit);
    app.router.get(app.adminName()+'/goodsTypeAttribute/delete',app.controller.admin.goodsTypeAttribute.delete);
    app.router.get(app.adminName()+'/goodsTypeAttribute/change',app.controller.admin.goodsTypeAttribute.change);
+   //商品分类
+   app.router.get(app.adminName()+'/goodsCate',app.controller.admin.goodsCate.index);
+   app.router.get(app.adminName()+'/goodsCate/add',app.controller.admin.goodsCate.add);
+   app.router.get(app.adminName()+'/goodsCate/edit',app.controller.admin.goodsCate.edit);
+   app.router.post(app.adminName()+'/goodsCate/doadd',app.controller.admin.goodsCate.doAdd);
+   app.router.post(app.adminName()+'/goodsCate/doedit',app.controller.admin.goodsCate.doEdit);
+   app.router.get(app.adminName()+'/goodsCate/delete',app.controller.admin.goodsCate.delete);
+   app.router.get(app.adminName()+'/goodsCate/change',app.controller.admin.goodsCate.change);
 }

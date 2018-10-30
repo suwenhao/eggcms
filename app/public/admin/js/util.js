@@ -21,6 +21,7 @@ var reqAjax = {
                 }
             },
             error:function(err){
+                console.log(err);
                 layer.msg('请求出错');
             }
         })
