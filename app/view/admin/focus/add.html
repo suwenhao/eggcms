@@ -7,68 +7,72 @@
     <% include ../public/page_title.html%>
 </head>
 <body class="main_body">
-    <div class="layui-row">
-        <div class="layui-col-md9">
-            <form class="layui-form" style='padding:15px 0;'>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">分类</label>
-                    <div class="layui-input-inline">
-                        <select id="type" name="type" class="newsLook" lay-filter="type">
-                            <option value="1">网站</option>
-                            <option value="2">APP</option>
-                            <option value="3">小程序</option>
-                        </select>
-                    </div>
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加轮播图</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分类</label>
+                            <div class="layui-input-inline">
+                                <select id="type" name="type" class="newsLook" lay-filter="type">
+                                    <option value="1">网站</option>
+                                    <option value="2">APP</option>
+                                    <option value="3">小程序</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" placeholder="请输入名称" required class="layui-input" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">跳转地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="link" placeholder="请输入跳转地址" required class="layui-input" lay-verify="required" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上传图片</label>
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn" id="upload">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id='imgBox'>
+                            <label class="layui-form-label">图片预览</label>
+                            <div class="layui-input-block" id='imgs'>
+                                
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-block">
+                                <input required name="sort" placeholder="请输入排序" lay-verify="required" class="layui-input"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="addFocus">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <a href="<%=adminName%>/focus" class="layui-btn layui-btn-primary">返回</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="title" placeholder="请输入名称" required class="layui-input" lay-verify="required">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">跳转地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="link" placeholder="请输入跳转地址" required class="layui-input" lay-verify="required" >
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">上传图片</label>
-                    <div class="layui-input-block">
-                        <button type="button" class="layui-btn" id="upload">
-                            <i class="layui-icon">&#xe67c;</i>上传图片
-                        </button>
-                    </div>
-                </div>
-                <div class="layui-form-item" id='imgBox'>
-                    <label class="layui-form-label">图片预览</label>
-                    <div class="layui-input-block" id='imgs'>
-                        
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-block">
-                        <input required name="sort" placeholder="请输入排序" lay-verify="required" class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="addFocus">立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        <a href="<%=adminName%>/focus" class="layui-btn layui-btn-primary">返回</a>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-
+    </fieldset>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
     <script type="text/javascript" src="/public/admin/js/index.js"></script>
     <script>

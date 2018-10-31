@@ -7,49 +7,54 @@
     <% include ../public/page_title.html%>
 </head>
 <body class="main_body">
-    <div class="layui-row">
-        <div class="layui-col-md9">
-            <form class="layui-form" style='padding:15px 0;'>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">属性名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
-                    </div>
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加商品类型属性</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">属性名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所属类型</label>
+                            <div class="layui-input-block">
+                                <select name="cate_id" lay-verify="required" lay-filter="cate_id">
+                                    <%for(var i=0;i<list.length;i++){%>
+                                        <option <%if(list[i]._id==id){%>selected<%}%> value="<%=list[i]._id%>"><%=list[i].title%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">录入方式</label>
+                            <div class="layui-input-block">
+                                <input type="radio" lay-filter="attr_type" name="attr_type" value="1" title="单行文本框" checked />
+                                <input type="radio" lay-filter="attr_type" name="attr_type" value="2" title="多行文本框" />
+                                <input type="radio" lay-filter="attr_type" name="attr_type" value="3" title="从下面的列表中选择(以英文逗号分隔)" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id='value'>
+                            <label class="layui-form-label">可选列表</label>
+                            <div class="layui-input-block">
+                                <textarea id="attr_value" name="attr_value" placeholder="以英文逗号分隔" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="addType">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <a href="<%=adminName%>/goodsTypeAttribute?id=<%=id%>" class="layui-btn layui-btn-primary">返回</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">所属类型</label>
-                    <div class="layui-input-block">
-                        <select name="cate_id" lay-verify="required" lay-filter="cate_id">
-                            <%for(var i=0;i<list.length;i++){%>
-                                <option <%if(list[i]._id==id){%>selected<%}%> value="<%=list[i]._id%>"><%=list[i].title%></option>
-                            <%}%>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">录入方式</label>
-                    <div class="layui-input-block">
-                        <input type="radio" lay-filter="attr_type" name="attr_type" value="1" title="单行文本框" checked />
-                        <input type="radio" lay-filter="attr_type" name="attr_type" value="2" title="多行文本框" />
-                        <input type="radio" lay-filter="attr_type" name="attr_type" value="3" title="从下面的列表中选择(以英文逗号分隔)" />
-                    </div>
-                </div>
-                <div class="layui-form-item" id='value'>
-                    <label class="layui-form-label">可选列表</label>
-                    <div class="layui-input-block">
-                        <textarea id="attr_value" name="attr_value" placeholder="以英文逗号分隔" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="addType">立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        <a href="<%=adminName%>/goodsTypeAttribute?id=<%=id%>" class="layui-btn layui-btn-primary">返回</a>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </fieldset>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
     <script type="text/javascript" src="/public/admin/js/index.js"></script>
     <script>

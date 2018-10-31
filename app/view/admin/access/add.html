@@ -8,82 +8,87 @@
     <link rel="stylesheet" href="/public/admin/lib/zTree/css/zTreeStyle/zTreeStyle.css">
 </head>
 <body class="main_body">
-    <div class="layui-row">
-        <div class="layui-col-md9">
-            <form class="layui-form" style='padding:15px 0;'>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">模块名称</label>
-                    <div class="layui-input-block">
-                        <input type="text"  name="module_name" required class="layui-input" lay-verify="required" placeholder="请输入模块名称">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">节点类型</label>
-                        <div class="layui-input-inline">
-                            <select id="type" name="type" class="newsLook" lay-filter="type">
-                                <option value="1">模块</option>
-                                <option value="2">菜单</option>
-                                <option value="3">操作</option>
-                            </select>
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加权限</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">模块名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  name="module_name" required class="layui-input" lay-verify="required" placeholder="请输入模块名称">
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">所属模块</label>
-                        <div class="layui-input-inline">
-                            
-                            <input type="hidden" id="module_id" name='module_id' value="0">
-                            <input type="text" value="顶级模块" id="module" name="module" class="layui-input">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">节点类型</label>
+                                <div class="layui-input-inline">
+                                    <select id="type" name="type" class="newsLook" lay-filter="type">
+                                        <option value="1">模块</option>
+                                        <option value="2">菜单</option>
+                                        <option value="3">操作</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">所属模块</label>
+                                <div class="layui-input-inline">
+                                    
+                                    <input type="hidden" id="module_id" name='module_id' value="0">
+                                    <input type="text" value="顶级模块" id="module" name="module" class="layui-input">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                        <label class="layui-form-label">权限图标</label>
-                        <div class="layui-input-block">
-                            <input type="text" id='icon' name="icon"  class="layui-input" placeholder="请输入图标class">
+                        <div class="layui-form-item">
+                                <label class="layui-form-label">权限图标</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id='icon' name="icon"  class="layui-input" placeholder="请输入图标class">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">菜单模块</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id='model' name="model"  class="layui-input" placeholder="请输入菜单模块">
+                                </div>
+                            </div>
+                        <div class="layui-form-item" id="actionNameBox">
+                            <label class="layui-form-label">操作名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" id='action_name'  name="action_name"  class="layui-input" placeholder="请输入操作名称">
+                            </div>
                         </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">菜单模块</label>
-                        <div class="layui-input-block">
-                            <input type="text" id='model' name="model"  class="layui-input" placeholder="请输入菜单模块">
+                        <div class="layui-form-item" id="urlBox">
+                            <label class="layui-form-label">操作地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" id='url'  name="url" class="layui-input"  placeholder="请输入操作地址">
+                            </div>
                         </div>
-                    </div>
-                <div class="layui-form-item" id="actionNameBox">
-                    <label class="layui-form-label">操作名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" id='action_name'  name="action_name"  class="layui-input" placeholder="请输入操作名称">
-                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限排序</label>
+                            <div class="layui-input-block">
+                                <input type="text"  id="sort" name="sort" class="layui-input" placeholder="请输入排序">
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限描述</label>
+                            <div class="layui-input-block">
+                                <textarea name='description' placeholder="请输入权限描述" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button id="addAccess" class="layui-btn" lay-submit lay-filter="addAccess">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <a href="<%=adminName%>/access" class="layui-btn layui-btn-primary">返回</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="layui-form-item" id="urlBox">
-                    <label class="layui-form-label">操作地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" id='url'  name="url" class="layui-input"  placeholder="请输入操作地址">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">权限排序</label>
-                    <div class="layui-input-block">
-                        <input type="text"  id="sort" name="sort" class="layui-input" placeholder="请输入排序">
-                    </div>
-                </div>
-                
-                <div class="layui-form-item">
-                    <label class="layui-form-label">权限描述</label>
-                    <div class="layui-input-block">
-                        <textarea name='description' placeholder="请输入权限描述" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button id="addAccess" class="layui-btn" lay-submit lay-filter="addAccess">立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        <a href="<%=adminName%>/access" class="layui-btn layui-btn-primary">返回</a>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </fieldset>
     <div id="tree" class="ztree" style="display:none;padding:20px;"></div>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
     <script type="text/javascript" src="/public/admin/js/index.js"></script>

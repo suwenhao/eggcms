@@ -42,6 +42,12 @@ module.exports = appInfo => {
       options: {useNewUrlParser:true,useCreateIndex:true,}, //mongodb4.0需要的设置
     },
   };
+  //上传表单数量
+  config.multipart = {
+    fields: '50',
+    fileSize: '10m', //最大上传10m的文件
+
+  }
   config.api = 'http://www.phonegap100.com/';
   config.uploadDir = 'app/public/admin/upload'; //文件上传的目录
   return config;

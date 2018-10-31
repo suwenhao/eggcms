@@ -6,8 +6,14 @@
 	<!-- title -->
     <% include ../public/page_title.html%>
 	<link rel="stylesheet" href="/public/admin/module/treetable-lay/treetable.css">
+	<style>
+		.layui-elem-quote{
+			font-size:20px;
+		}
+	</style>
 </head>
 <body class="main_body">
+	<blockquote class="layui-elem-quote">角色授权</blockquote>
 	<div class="layui-form news_list">
 		<form class="layui-form">
 			<div style="padding:0 10px ;">
@@ -15,7 +21,7 @@
 			</div>
 			<div class="layui-form-item" style="padding:10px;padding-bottom:0px;text-align: right;">
 				<p style="display:inline-block;color:coral;">角色:<%=name%></p>
-				<button class="layui-btn" lay-submit lay-filter="submit">角色授权</button>
+				<button class="layui-btn" lay-submit lay-filter="submit">授权</button>
 				<a href="<%=adminName%>/role" class="layui-btn layui-btn-primary">返回</a>
 			</div>
 		</form>
@@ -47,7 +53,7 @@
 				treetable.render({
 					treeColIndex: 1,
 					treeSpid: "0",
-					height: 'full-100',
+					height: 'full-150',
 					treeIdName: '_id',
 					treePidName: 'module_id',
 					treeDefaultClose: false,

@@ -51,6 +51,7 @@ class IndexController extends BaseController {
     }
     async upload(){
         let parts = this.ctx.multipart({autoFields:true});
+        //是否缩略图参数
         let flag = this.ctx.request.query.jimp;
         let stream;
         let files=[];

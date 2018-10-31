@@ -7,32 +7,36 @@
     <% include ../public/page_title.html%>
 </head>
 <body class="main_body">
-    <div class="layui-row">
-        <div class="layui-col-md9">
-            <form class="layui-form" style='padding:15px 0;'>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
-                    </div>
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加商品类型</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">类型名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">类型描述</label>
+                            <div class="layui-input-block">
+                                <textarea required name="description" placeholder="类型描述" lay-verify="required" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="addType">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <a href="<%=adminName%>/goodsType" class="layui-btn layui-btn-primary">返回</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型描述</label>
-                    <div class="layui-input-block">
-                        <textarea required name="description" placeholder="类型描述" lay-verify="required" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="addType">立即提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                        <a href="<%=adminName%>/goodsType" class="layui-btn layui-btn-primary">返回</a>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-
+    </fieldset>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
     <script type="text/javascript" src="/public/admin/js/index.js"></script>
     <script>

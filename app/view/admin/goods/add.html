@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>增加商品</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">通用信息</li>
+            <li>详细描述</li>
+            <li>商品属性</li>
+            <li>规格与包装</li>
+            <li>商品相册</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row">
+                    <div class="layui-col-md9">
+                        <form class="layui-form" style='padding:15px 0;'>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">分类名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="输入分类名称">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">上级分类</label>
+                                <div class="layui-input-block">
+                                    <select name="pid" lay-verify="required" lay-filter="pid">
+                                        <option value="0">顶级分类</option>
+                                        <%for(var i=0;i<list.length;i++){%>
+                                            <option value="<%=list[i]._id%>"><%=list[i].title%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">分类图片</label>
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn" id="upload">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" id='imgBox'>
+                                <label class="layui-form-label">图片预览</label>
+                                <div class="layui-input-block" id='imgs'>
+                                    
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">筛选属性</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="filter_attr" class="layui-input" placeholder="输入筛选属性名称">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">跳转地址</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="link" class="layui-input" placeholder="输入跳转地址">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">分类模板</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="template" class="layui-input" placeholder="空代表默认">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Seo标题</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sub_title" class="layui-input" placeholder="输入Seo标题">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Seo关键词</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="keywords" class="layui-input" placeholder="输入Seo关键词">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">Seo描述</label>
+                                <div class="layui-input-block">
+                                    <textarea name="description" placeholder="Seo描述" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">排序</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sort" class="layui-input" placeholder="排序">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">状态</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
+                                </div>
+                            </div>
+                            
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="addCate">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    <a href="<%=adminName%>/goodsCate" class="layui-btn layui-btn-primary">返回</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">内容2</div>
+            <div class="layui-tab-item">内容3</div>
+            <div class="layui-tab-item">内容4</div>
+            <div class="layui-tab-item">内容5</div>
+        </div>
+    </div>
+    
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form', 'jquery', 'upload', 'element'], function() {
+            var form = layui.form,
+                $ = layui.jquery,
+                element = layui.element,
+                upload = layui.upload;
+            
+            $('#imgBox').hide();
+            //上传图片
+            var uploadInst = upload.render({
+                elem: '#upload', //绑定元素
+                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true", //上传接口
+                done: function(res){
+                    //上传完毕回调
+                    if(res.code===0){
+                        layer.msg(res.msg);
+                        $('#imgBox').show()
+                        var html = '';
+                        for(var i=0;i<res.data.length;i++){
+                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="cate_img" value="'+res.data[i]['file']+'">';
+                        }
+                        $('#imgs').html(html)
+                        $('#imgs').find('img').on('click',function(){
+                            var src = $(this).attr('src');
+                            var h = $(this).height();
+                            var w = $(this).width();
+                            var area = '500px';
+                            if(h>w){
+                                area = '400px';
+                            }else if(h<w){
+                                area = '700px';
+                            }
+                            layer.open({
+                                area: area,
+                                title: '图片预览',
+                                content: '<img src="'+src+'" width="100%">',
+                            }); 
+                        })
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                },
+                error: function(){
+                //请求异常回调
+                    layer.msg('请求出错');
+                }
+            });
+
+            //监听提交
+            form.on('submit(addCate)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                console.log(data.field)
+                if(data.field.status){
+                    data.field.status = 1
+                }else{
+                    data.field.status = 0
+                }
+                if(!data.field.cate_img){
+                    // layer.msg('请上传分类图片');
+                    // return false;
+                    data.field.cate_img = ""
+                }
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/goodsCate/doadd',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/goodsCate"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        
+                    },
+                    error:function(err){
+                        layer.msg('后台出错');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

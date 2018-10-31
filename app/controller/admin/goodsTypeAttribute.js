@@ -31,7 +31,7 @@ class GoodsTypeAttributeController extends Controller {
     var cate_id = this.ctx.request.query.cate_id;
     let list = await this.service.goodsType.getList();
     let gta = await this.service.goodsTypeAttribute.getType(id);
-    console.log(JSON.stringify(list))
+    // console.log(JSON.stringify(list))
     await this.ctx.render('admin/goodsTypeAttribute/edit',{
         list,
         gta,
