@@ -1,5 +1,5 @@
 var reqAjax = {
-    delete:function(type,url,data,returnUrl,callback){
+    delete:function(type,url,data,returnUrl,callback,msg){
         $.ajax({
             type:type,
             data:data,
@@ -8,7 +8,8 @@ var reqAjax = {
             success:function(res){
                 console.log(res);
                 if(res.code===0){
-                    layer.msg(res.msg);
+                    var tipMsg = msg?msg:res.msg;
+                    layer.msg(tipMsg);
                     if(callback){
                         callback()
                     }else{

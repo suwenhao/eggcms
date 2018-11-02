@@ -1,6 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
+const util = require('../core/util.js')
 
 class GoodsService extends Service {
   async list(query) {
@@ -11,9 +12,11 @@ class GoodsService extends Service {
     // console.log(count)
     let list = await this.ctx.model.Goods.aggregate([
       {$skip:page},
-      {$limit:limit}
+      {$limit:limit},
+      {$match:{'is_delete':0}}
     ]);
     // console.log(list)
+    list=list.sort(util.compare);
     return {list,count};
   }
   async getGoodsColor(){

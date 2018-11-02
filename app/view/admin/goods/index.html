@@ -101,13 +101,19 @@
 								content:'是否删除该商品？',
 								btn: ['确认', '取消'], //可以无限个按钮
 							}, function(index, layero){
-								var url = '<%=adminName%>/goods/delete';
+								var url = '<%=adminName%>/goods/change';
+								// var params = {
+								// 	model:'Goods',
+								// 	id:id
+								// }
 								var params = {
 									model:'Goods',
+									attr:'is_delete',
+									value:1,
 									id:id
 								}
 								//删除
-								reqAjax.delete('get', url, params, "<%=adminName%>/goods");
+								reqAjax.delete('get', url, params, "<%=adminName%>/goods",false,'删除成功');
 
 							}, function(index){console.log('取消删除')});
 						})
