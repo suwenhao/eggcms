@@ -67,7 +67,7 @@ class GoodsController extends Controller {
         goodsColors.push(color);
       }
     }
-    console.log(goodsColors)
+    // console.log(goodsColors)
     let newGoodsTypeAttrs = []
     for(let i=0;i<goodsTypeAttrs.length;i++){
       if(goodsTypeAttrs[i].attribute_type==3){
@@ -207,7 +207,7 @@ class GoodsController extends Controller {
   }
   async doEdit() {
     let newGoods = this.ctx.request.body;
-    console.log(newGoods)
+    // console.log(newGoods)
     //商品属性id
     if(newGoods.goods_type_id!='0'){
       newGoods.goods_type_id = this.app.mongoose.Types.ObjectId(newGoods.goods_type_id)

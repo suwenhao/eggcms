@@ -12,9 +12,11 @@ var reqAjax = {
                     if(callback){
                         callback()
                     }else{
-                        setTimeout(function(){
-                            window.location.href = returnUrl
-                        },500)
+                        if(returnUrl){
+                            setTimeout(function(){
+                                window.location.href = returnUrl
+                            },500)
+                        }
                     }
                 }else{
                     layer.msg(res.msg);

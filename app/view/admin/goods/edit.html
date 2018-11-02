@@ -35,7 +35,14 @@
         .layui-row.layui-row-no::before{
             display: none;
             clear: none;
-
+        }
+        .posi-img-box{
+            position: relative;
+        }
+        .posi-img-box .posi-img{
+            position: absolute;
+            top:10px;
+            right:10px;
         }
     </style>
 </head>
@@ -170,9 +177,9 @@
                                     <div class="layui-input-block">
                                         <%for(var i=0;i<colorList.length;i++){%>
                                             <%if(list.goods_color.indexOf(colorList[i]._id.toString())!=-1){%>
-                                                <input type="checkbox" checked value="<%-colorList[i]._id%>" name="goods_colors[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
+                                                <input type="checkbox" checked value="<%-colorList[i]._id%>" name="goods_color[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
                                             <%}else{%>
-                                                <input type="checkbox" value="<%-colorList[i]._id%>" name="goods_colors[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
+                                                <input type="checkbox" value="<%-colorList[i]._id%>" name="goods_color[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
                                             <%}%>
                                         <%}%>
                                     </div>
@@ -274,6 +281,7 @@
     <div id="tree" class="ztree" style="display:none;padding:20px;"></div>
 	<script src="/public/admin/layui/layui.js"></script>
     <script src="/public/admin/js/index.js"></script>
+    <script src="/public/admin/js/util.js"></script>
     <script src="/public/admin/lib/froalaEditor/js/jquery-1.10.1.js"></script>
     <script src="/public/admin/lib/zTree/js/jquery.ztree.all.min.js"></script>
     <script src="/public/admin/lib/froalaEditor/js/froala_editor.pkgd.min.js"></script>
@@ -351,16 +359,17 @@
                 var selectVal = [];
                 var html ='<div class="layui-row layui-row-no">';
                 for(var i=0;i<imgs.length;i++){
-                    html+='<div class="layui-col-md2">';
+                    html+='<div class="layui-col-md2 layui-col-space5 posi-img-box">';
+                    html+='<img data-id="'+imgs[i]._id+'" class="posi-img" src="/public/admin/images/x_alt.png"/>';
                     html+='<img src="'+imgs[i].img_url+'" style="width:80%;display:block;margin:0 auto;margin-bottom:10px;"/>';
                     html+='<input type="hidden" name="goods_image_list[]" value="'+imgs[i].img_url+'">'
                     html +='<div class="layui-row">';
                     html+='<div class="layui-col-md1">&nbsp;';
                     html+='</div>';
                     html+='<div class="layui-col-md10">';
-                    html+='<select name="goods_color_id[]" lay-verify="goods_color_id_'+imgs[i]._id+'" id="goods_color_id_'+imgs[i]._id+'" lay-filter="goods_color_id_'+imgs[i]._id+'">';
+                    html+='<select name="goods_color_id[]" color_id="'+imgs[i].color_id+'" lay-verify="goods_color_id_'+imgs[i]._id+'" id="goods_color_id_'+imgs[i]._id+'" lay-filter="goods_color_id_'+imgs[i]._id+'">';
                         for(var j=0;j<goodsColors.length;j++){
-                            html+='<option value="'+goodsColors[j]._id+'">'+goodsColors[j].color_name+'</option>';
+                            html+='<option color_id="'+goodsColors[j]._id+'" value="'+goodsColors[j]._id+'">'+goodsColors[j].color_name+'</option>';
                         }
                     html+='</select>';
                     html+='</div>';
@@ -379,7 +388,42 @@
                         $("#"+selectArr[i]).find("option[value='"+selectVal[i]+"']").prop("selected",true);
                         form.render('select');
                     }
+                    (function(i){
+                        form.on('select('+selectArr[i]+')', function(data){
+                            var val = data.value;
+                            var id = selectArr[i].replace('goods_color_id_','');
+                            var url = '<%=adminName%>/goods/change';
+                            var params = {
+                                model:'GoodsImage',
+                                attr:'color_id',
+                                value:val,
+                                id:id
+                            }
+                            //改变
+                            reqAjax.change('get', url, params)
+                        })
+                    })(i)
                 }
+                $('.posi-img').on('click',function(){
+                    var id = $(this).attr('data-id');
+                    var $this = $(this);
+                    layer.confirm('是否删除该商品图片？',{
+                        title:'警告',
+                        content:'是否删除该商品图片？',
+                        btn: ['确认', '取消'], //可以无限个按钮
+                    }, function(index, layero){
+                        var url = '<%=adminName%>/goods/delete';
+                        var params = {
+                            model:'GoodsImage',
+                            id:id
+                        }
+                        //删除
+                        reqAjax.delete('get', url, params,'',function(){
+                            $this.parent('.posi-img-box').remove();
+                        });
+
+                    }, function(index){console.log('取消删除')});
+                })
                 form.render();
             },
             //初始化富文本
@@ -652,6 +696,9 @@
                     data.field.goods_content = $('#content').froalaEditor('html.get');
                     if(!data.field.goods_img){
                         data.field.goods_img = ""
+                    }
+                    if(data.field.goods_color){
+                        data.field.goods_color=data.field.goods_color.join(',')
                     }
                     console.log(data.field)
                     $.ajax({
