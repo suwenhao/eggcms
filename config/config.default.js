@@ -45,8 +45,6 @@ module.exports = appInfo => {
   //上传表单数量
   config.multipart = {
     fields: '50',
-    fileSize: '10m', //最大上传10m的文件
-
   }
   config.api = 'http://www.phonegap100.com/';
   config.uploadDir = 'app/public/admin/upload'; //文件上传的目录

@@ -16,13 +16,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">类型名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="类型名称">
+                                <input type="text" name="title" class="layui-input" lay-verify="title" placeholder="类型名称">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">类型描述</label>
                             <div class="layui-input-block">
-                                <textarea required name="description" placeholder="类型描述" lay-verify="required" class="layui-textarea"></textarea>
+                                <textarea name="description" placeholder="类型描述" lay-verify="description" class="layui-textarea"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -43,6 +43,19 @@
          layui.use(['form','jquery'], function() {
             var form = layui.form,
                 $ = layui.jquery;
+            //自定义验证规则
+            form.verify({
+                title: function(value) {
+                    if(value.length ==0 ) {
+                        return '请输入类型名称';
+                    }
+                },
+                description: function(value) {
+                    if(value.length ==0 ) {
+                        return '请输入类型描述';
+                    }
+                },
+            });
             //监听提交
             form.on('submit(addType)', function(data) {
                 data.field._csrf = "<%=csrf%>";

@@ -8,6 +8,37 @@ class GoodsCateService extends Service {
     let res = await this.ctx.model.GoodsCate.find({"pid":"0"})
     return res;
   }
+  async getGoodsTree(){
+    try {
+        let res = await this.ctx.model.GoodsCate.aggregate([
+            {$match:{'pid':'0'}},
+            {
+                $lookup:{
+                    from:'goods_cate',
+                    localField:'_id',
+                    foreignField:'pid',
+                    as:'children'
+                }
+            }
+        ]);
+        res.sort(util.compare);
+        res=res.map(v=>{
+            return {
+                ...v,
+                name:v.title,
+                children:v.children.map(j=>{
+                  return {
+                    ...j,
+                    name:j.title
+                  }
+                }).sort(util.compare)
+            }
+        })
+        return res
+    } catch (error) {
+        return null
+    }
+  }
   async list(){
     let list = await this.ctx.model.GoodsCate.aggregate([
         {$match:{}}

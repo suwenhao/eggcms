@@ -29,7 +29,6 @@ class ImageController extends Controller {
         data:[],
       }
     }
-    
   }
   async delete() {
     let {id,model} = this.ctx.request.query;

@@ -66,6 +66,7 @@
 				})
 			},
 			delete:function(layer,table){
+				var _this = this;
 				$('.delete-btn').on('click',function(){
 					var id = $(this).attr('data-id');
 					// alert(id);
@@ -84,15 +85,16 @@
 							//执行重载
 							table.reload('table', {
 								height: 'full-100',
-								page: {
-									curr: 1 //重新从第 1 页开始
-								},
+								page:{
+									curr:1
+								}
 							});
 						});
 					}, function(index){console.log('取消删除')});
 				})
 			},
 			allDelete:function(layer,table,$){
+				var _this = this;
 				$('.all-delete').on('click',function(){
 					var checkStatus = table.checkStatus('table')
 					var data=checkStatus.data;
@@ -111,10 +113,10 @@
 									//执行重载
 									table.reload('table', {
 										height: 'full-100',
-										page: {
-											curr: 1 //重新从第 1 页开始
-										},
-									});								
+										page:{
+											curr:1
+										}
+									});	
 									return;
 								}else{
 									$.ajax({
@@ -152,7 +154,7 @@
 						$ = layui.jquery;
 					//第一个实例
 					var index = layer.load();
-					table.render({
+					_this.tableIns = table.render({
 						elem: '#table',
 						height: 'full-100',
 						method:'post',
@@ -196,11 +198,8 @@
 									}); 
 								})
 								//执行重载
-								table.reload('table', {
+								_this.tableIns.reload('table', {
 									height: 'full-100',
-									page: {
-										curr: 1 //重新从第 1 页开始
-									},
 								});
 							}else{
 								layer.msg(res.msg);
@@ -215,9 +214,9 @@
 						//执行重载
 						table.reload('table', {
 							height: 'full-100',
-							page: {
-								curr: 1 //重新从第 1 页开始
-							},
+							page:{
+								curr:1
+							}
 						});
 					})
 				})

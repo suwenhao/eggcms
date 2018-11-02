@@ -16,14 +16,14 @@
 				<div class="m-login-warp">
 					<form class="layui-form">
 						<div class="layui-form-item">
-							<input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+							<input type="text" name="username" lay-verify="username" placeholder="用户名" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-form-item">
-							<input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+							<input type="password" name="password" lay-verify="password" placeholder="密码" autocomplete="off" class="layui-input">
 						</div>
 						<div class="layui-form-item">
 							<div class="layui-inline">
-								<input type="text" name="verity" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input">
+								<input type="text" name="verity" lay-verify="verity" placeholder="验证码" autocomplete="off" class="layui-input">
 							</div>
 							<div class="layui-inline">
 								<img class="verifyImg" onclick="this.src=this.src+'?mt='+Math.random();" src="<%=adminName%>/code" />
@@ -57,8 +57,11 @@
 						}
 					},
 					password: [/(.+){6,12}$/, '密码必须6到12位'],
-					verity: [/(.+){6}$/, '验证码必须是6位'],
-					
+					verity:function(value) {
+						if(value.length == 0) {
+							return '验证码不能为空';
+						}
+					},
 				});
 
 				

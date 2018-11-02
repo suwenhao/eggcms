@@ -2,216 +2,685 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>修改商品分类</title>
+	<title>修改商品</title>
     <!-- title -->
     <% include ../public/page_title.html%>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/froala_editor.pkgd.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/froala_style.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="/public/admin/lib/diyUpload/css/webuploader.css">
+    <link rel="stylesheet" href="/public/admin/lib/diyUpload/css/diyUpload.css">
+    <style>
+        .layui-tab-item{
+            position: static;
+            min-height:400px;
+        }
+        .layui-form-select dl { max-height:200px; }
+        .layui-form-item .layui-input-inline{
+            width:40%;
+        }
+        /* #batchIUpload{
+            width:120px;
+            margin:20px auto;
+        } */
+        #batchIUpload div:nth-child(2){
+            width:120px !important;
+            height:42px !important;
+        }
+        .layui-row.layui-row-no{
+            padding:10px 0 20px 0;
+            border:1px solid #eee;
+        }
+        .layui-row.layui-row-no::before{
+            display: none;
+            clear: none;
+
+        }
+    </style>
 </head>
 <body class="main_body">
-    <div class="layui-row">
-        <div class="layui-col-md9">
-            <form class="layui-form" style='padding:15px 0;'>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">分类名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.title%>"  name="title" required class="layui-input newsName" lay-verify="required" placeholder="输入分类名称">
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>修改商品</legend>
+        <div class="layui-field-box">
+            <form class="layui-form">
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">通用信息</li>
+                        <li>详细描述</li>
+                        <li>其他信息</li>
+                        <li>规格与包装</li>
+                        <li>商品相册</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-row">
+                                <div class="layui-col-md9">
+                                    <div style='padding:15px 0;'>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" value="<%=list.title%>" name="title" lay-verify="title" autocomplete="off" class="layui-input" placeholder="输入商品标题">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">附属标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" value="<%=list.sub_title%>" name="sub_title" class="layui-input" placeholder="输入附属标题">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品版本</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" value="<%=list.goods_version%>" name="goods_version" class="layui-input" placeholder="输入商品版本">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">所属分类</label>
+                                            <div class="layui-input-inline">
+                                                <input type="hidden" value="<%=list.cate_id%>" id="cate_id" name="cate_id" class="layui-input">
+                                                <input type="text" id="cate_name" name="cate_name" class="layui-input" placeholder="选择分类">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">分类树选择</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品图片</label>
+                                            <div class="layui-input-block">
+                                                <button type="button" class="layui-btn" id="upload">
+                                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item" id='imgBox'>
+                                            <label class="layui-form-label">图片预览</label>
+                                            <div class="layui-input-block" id='imgs'>
+                                                <%if(list.goods_img){%>
+                                                    <img src="<%=list.goods_img%>" width="200" alt=""/>
+                                                    <input type="hidden" name="goods_img" value="<%=list.goods_img%>">
+                                                <%}%>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品价格</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" value="<%=list.shop_price%>" name="shop_price" lay-verify="price" autocomplete="off" class="layui-input" placeholder="输入商品价格">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">必须是数字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品原价</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" value="<%=list.market_price%>" name="market_price" lay-verify="old_price" autocomplete="off" class="layui-input" placeholder="输入商品原价">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">必须是数字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品库存</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" value="<%=list.goods_number%>" name="goods_number" lay-verify="goods_number" autocomplete="off" class="layui-input" placeholder="输入商品库存">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">必须是数字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品排序</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" value="<%=list.sort%>" name="sort" lay-verify="sort" class="layui-input" placeholder="输入商品排序" value="1">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">必须是数字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品状态</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" <%if(list.status==1){%> checked<%}%> name="status" lay-skin="switch" lay-text="显示|隐藏">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品上架</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" <%if(list.is_shelf==1){%> checked<%}%> name="is_shelf" lay-skin="switch" lay-text="上架|下架">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">加入推荐</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" <%if(list.is_best==1){%> checked<%}%> name="is_best" title="精品" lay-skin="primary"/>
+                                                <input type="checkbox" <%if(list.is_hot==1){%> checked<%}%> name="is_hot" title="热销" lay-skin="primary"/>
+                                                <input type="checkbox" <%if(list.is_new==1){%> checked<%}%> name="is_new" title="新品" lay-skin="primary"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div style='padding:15px 0;'>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">商品详细</label>
+                                    <div class="layui-input-block">
+                                        <textarea id="content" style="display: none;"><%=list.goods_content%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div style='padding:15px 0;'>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">商品颜色</label>
+                                    <div class="layui-input-block">
+                                        <%for(var i=0;i<colorList.length;i++){%>
+                                            <%if(list.goods_color.indexOf(colorList[i]._id.toString())!=-1){%>
+                                                <input type="checkbox" checked value="<%-colorList[i]._id%>" name="goods_colors[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
+                                            <%}else{%>
+                                                <input type="checkbox" value="<%-colorList[i]._id%>" name="goods_colors[]" title="<%=colorList[i].color_name%>" lay-skin="primary">
+                                            <%}%>
+                                        <%}%>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">关联商品</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" value="<%=list.relation_goods%>" name="relation_goods" class="layui-input" placeholder="输入关联商品id">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">填写关联商品的id多个以英文逗号隔开 格式:23,24,39</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">关联赠品</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" value="<%=list.goods_gift%>" name="goods_gift" class="layui-input" placeholder="输入关联赠品,默认空">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">可为空 格式:23-2,39-5 说明:例如23-2中的23表示商品id，2表示商品数量</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">关联配件</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" value="<%=list.goods_fitting%>" name="goods_fitting" class="layui-input" placeholder="输入关联配件,默认空">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">可为空 格式:23-2,39-5 说明:例如23-2中的23表示商品id，2表示商品数量</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">更多属性</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" value="<%=list.goods_attrs%>" name="goods_attrs" class="layui-input" placeholder="输入更多属性,默认空">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">格式:颜色:红色,白色,黄色|尺寸:41,42,43 [标点符号皆为英文号]</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">Seo关键词</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="<%=list.goods_keywords%>" name="goods_keywords" class="layui-input" placeholder="输入Seo关键词,默认空">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">Seo关键描述</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="goods_desc" placeholder="输入Seo关键描述,默认空" class="layui-textarea"><%=list.goods_desc%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="layui-row">
+                                <div class="layui-col-md8">
+                                    <div style='padding:15px 0;'>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">更多属性</label>
+                                            <div class="layui-input-block">
+                                                <select id="goods_type_id" name="goods_type_id" lay-verify="goods_type_id" lay-filter="goods_type_id">
+                                                    <option value="0">请选择商品类型</option>
+                                                    <%for(var i=0;i<goodsTypes.length;i++){%>
+                                                        <option value="<%=goodsTypes[i]._id%>"><%=goodsTypes[i].title%></option>
+                                                    <%}%>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="goods_type_attribute"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="layui-row">
+                                <div class="layui-col-md12">
+                                    <div style='padding:15px 0;'>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">选择颜色</label>
+                                            <div class="layui-input-block">
+                                               <div id="photoView"></div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">批量上传</label>
+                                            <div class="layui-input-block">
+                                                <div id="batchIUpload"></div>
+                                                <div id="photoList"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">上级分类</label>
                     <div class="layui-input-block">
-                        <select id="pid" name="pid" lay-verify="required" lay-filter="pid">
-                            <option value="0">顶级分类</option>
-                            <%for(var i=0;i<list.length;i++){%>
-                                <option value="<%=list[i]._id%>"><%=list[i].title%></option>
-                            <%}%>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">分类图片</label>
-                    <div class="layui-input-block">
-                        <button type="button" class="layui-btn" id="upload">
-                            <i class="layui-icon">&#xe67c;</i>上传图片
-                        </button>
-                    </div>
-                </div>
-                <div class="layui-form-item" id='imgBox'>
-                    <label class="layui-form-label">图片预览</label>
-                    <div class="layui-input-block" id='imgs'>
-                        <% if(res.cate_img){%>
-                        <img src="<%=res.cate_img%>" width="200" alt=""/>
-                        <input type="hidden" name="cate_img" value="<%=res.cate_img%>">
-                        <%}%>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">筛选属性</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.filter_attr%>" name="filter_attr" class="layui-input" placeholder="输入筛选属性名称">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">跳转地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.link%>" name="link" class="layui-input" placeholder="输入跳转地址">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">分类模板</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.template%>" name="template" class="layui-input" placeholder="空代表默认">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">Seo标题</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.sub_title%>" name="sub_title" class="layui-input" placeholder="输入Seo标题">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">Seo关键词</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.keywords%>" name="keywords" class="layui-input" placeholder="输入Seo关键词">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">Seo描述</label>
-                    <div class="layui-input-block">
-                        <textarea  name="description" placeholder="Seo描述" class="layui-textarea"><%=res.description%></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-block">
-                        <input type="text" value="<%=res.sort%>" name="sort" class="layui-input" placeholder="排序">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" <%if(res.status){%>checked<%}%> name="status" lay-skin="switch" lay-text="显示|隐藏">
-                    </div>
-                </div>
-                
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="editCate">保存修改</button>
-                        <a href="<%=adminName%>/goodsCate" class="layui-btn layui-btn-primary">返回</a>
+                        <button class="layui-btn" lay-submit lay-filter="editGoods">立即提交</button>
+                        <a href="<%=adminName%>/goods" class="layui-btn layui-btn-primary">返回</a>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
-    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    </fieldset>
+    <div id="tree" class="ztree" style="display:none;padding:20px;"></div>
+	<script src="/public/admin/layui/layui.js"></script>
+    <script src="/public/admin/js/index.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/jquery-1.10.1.js"></script>
+    <script src="/public/admin/lib/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/froala_editor.pkgd.min.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/languages/zh_cn.js"></script>
+    <script src="/public/admin/lib/diyUpload/js/webuploader.html5only.min.js"></script>
+    <script src="/public/admin/lib/diyUpload/js/diyUpload.js"></script>
     <script>
-         layui.use(['form', 'jquery', 'upload'], function() {
-            var form = layui.form,
-                $ = layui.jquery,
-                upload = layui.upload;
-            let flag = '<%=res.cate_img%>';
-            if(flag){
-                $('#imgBox').show();
-            }else{
-                $('#imgBox').hide();
-            }
-            $('#imgs').find('img').on('click',function(){
-                var src = $(this).attr('src');
-                var h = $(this).height();
-                var w = $(this).width();
-                var area = '500px';
-                if(h>w){
-                    area = '400px';
-                }else if(h<w){
-                    area = '700px';
-                }
-				layer.open({
-					area:area,
-					title: '图片预览',
-					content: '<img src="'+src+'" width="100%">',
-				}); 
-            })
-            //上传图片
-            var uploadInst = upload.render({
-                elem: '#upload', //绑定元素
-                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true", //上传接口
-                done: function(res){
-                    //上传完毕回调
-                    if(res.code===0){
-                        layer.msg(res.msg);
-                        $('#imgBox').show()
-                        var html = '';
-                        for(var i=0;i<res.data.length;i++){
-                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="cate_img" value="'+res.data[i]['file']+'">';
+        var AddGoods = {
+            //分类树数据
+            goodsCates:JSON.parse('<%-goodsCates%>'),
+            //初始化
+            init:function(){
+                this.createText();
+                this.layuiLoad();
+                this.createTree();
+                this.batchIUpload();
+            },
+            //生成树
+            createTree:function(){
+                this.zTreeObj = $.fn.zTree.init($("#tree"), {
+                    data:{
+                        simpleData:{
+                            enable: true,
+                            idKey:'_id',
+                            pIdKey :'pid'
                         }
-                        $('#imgs').html(html)
-                        $('#imgs').find('img').on('click',function(){
-                            var src = $(this).attr('src');
-                            var h = $(this).height();
-                            var w = $(this).width();
-                            var area = '500px';
-                            if(h>w){
-                                area = '400px';
-                            }else if(h<w){
-                                area = '700px';
-                            }
-                            layer.open({
-                                area: area,
-                                title: '图片预览',
-                                content: '<img src="'+src+'" width="100%">',
-                            }); 
-                        })
-                    }else{
-                        layer.msg(res.msg);
                     }
-                },
-                error: function(){
-                //请求异常回调
-                    layer.msg('请求出错');
+                }, this.goodsCates);
+                this.zTreeObj.expandAll(true);
+                this.initCate()
+            },
+            //初始化商品类型属性
+            initGoodsType: function(form){
+                var data = JSON.parse('<%-goodsTypeAttrs%>');
+                console.log(data);
+                var html = "";
+                var selectArr = [];
+                var selectVal = [];
+                for(var i=0;i<data.length;i++){
+                    html+='<div class="layui-form-item">';
+                    html+='<label class="layui-form-label">'+data[i].attribute_title+'</label>';
+                    html+='<div class="layui-input-block">';
+                    if(data[i].attribute_type==1){
+                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i].attribute_id+'"/>';
+                        html+='<input class="layui-input" value="'+data[i].attribute_value+'" type="text" name="attr_value_list[]"/>';
+                    }else if(data[i].attribute_type==2){
+                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i].attribute_id+'"/>';
+                        html+='<textarea name="attr_value_list[]" class="layui-textarea">'+data[i].attribute_value+'</textarea>';
+                    }else if(data[i].attribute_type==3){
+                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i].attribute_id+'"/>';
+                        html+='<select name="attr_value_list[]" lay-verify="attrtype_'+data[i].attribute_id+'" id="attrtype_'+data[i].attribute_id+'" lay-filter="attrtype_'+data[i].attribute_id+'">';
+                            for(var j=0;j<data[i].attrs.length;j++){
+                                html+='<option value="'+data[i].attrs[j]+'">'+data[i].attrs[j]+'</option>';
+                            }
+                        html+='</select>';
+                        selectArr.push('attrtype_'+data[i].attribute_id);
+                        selectVal.push(data[i].attribute_value);
+                    }
+                    html+='</div>';
+                    html+='</div>';     
                 }
-            });
-            //默认选中
-            $("#pid").val('<%=res.pid%>');
-            form.render('select');
-            //监听提交
-            form.on('submit(editCate)', function(data) {
-                data.field._csrf = "<%=csrf%>";
-                data.field.id = "<%=id%>";
-                console.log(data.field)
-                if(data.field.status){
-                    data.field.status = 1
-                }else{
-                    data.field.status = 0
+                $('#goods_type_attribute').html(html);
+                for(var i=0;i<selectArr.length;i++){
+                    $("#"+selectArr[i]).find("option[value='"+selectVal[i]+"']").prop("selected",true);
+                    form.render('select');
                 }
-                if(!data.field.cate_img){
-                    // layer.msg('请上传分类图片');
-                    // return false;
-                    data.field.cate_img = ""
+                form.render();
+            },
+            //初始化相册
+            initPhotoView:function(form){
+                //photoView
+                var imgs = JSON.parse('<%-goodsImages%>');
+                var goodsColors = JSON.parse('<%-goodsColors%>');
+                var selectArr = [];
+                var selectVal = [];
+                var html ='<div class="layui-row layui-row-no">';
+                for(var i=0;i<imgs.length;i++){
+                    html+='<div class="layui-col-md2">';
+                    html+='<img src="'+imgs[i].img_url+'" style="width:80%;display:block;margin:0 auto;margin-bottom:10px;"/>';
+                    html+='<input type="hidden" name="goods_image_list[]" value="'+imgs[i].img_url+'">'
+                    html +='<div class="layui-row">';
+                    html+='<div class="layui-col-md1">&nbsp;';
+                    html+='</div>';
+                    html+='<div class="layui-col-md10">';
+                    html+='<select name="goods_color_id[]" lay-verify="goods_color_id_'+imgs[i]._id+'" id="goods_color_id_'+imgs[i]._id+'" lay-filter="goods_color_id_'+imgs[i]._id+'">';
+                        for(var j=0;j<goodsColors.length;j++){
+                            html+='<option value="'+goodsColors[j]._id+'">'+goodsColors[j].color_name+'</option>';
+                        }
+                    html+='</select>';
+                    html+='</div>';
+                    html+='<div class="layui-col-md1">&nbsp;';
+                    html+='</div>';
+                    html+='</div>';
+                    html+='</div>';
+                    selectArr.push('goods_color_id_'+imgs[i]._id);
+                    var color_id = imgs[i].color_id?imgs[i].color_id:'';
+                    selectVal.push(color_id);
                 }
-                $.ajax({
-                    type:'post',
-                    data:data.field,
-                    dataType:'json',
-                    url:'<%=adminName%>/goodsCate/doedit',
-                    success:function(res){
-                        console.log(res);
+                html+='</div>';
+                $('#photoView').html(html);
+                for(var i=0;i<selectVal.length;i++){
+                    if(selectVal[i]){
+                        $("#"+selectArr[i]).find("option[value='"+selectVal[i]+"']").prop("selected",true);
+                        form.render('select');
+                    }
+                }
+                form.render();
+            },
+            //初始化富文本
+            createText:function(){
+                let toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
+                this.contentText = $('#content').froalaEditor({
+
+                    height: 400,    //给编辑器设置默认的高度
+                    language: 'zh_cn',
+                    imageUploadURL:'<%=adminName%>/goods/uploadImage?_csrf=<%=csrf%>',
+                    //根据不同的分辨率加载不同的配置
+                    toolbarButtons: toolbar,
+                    toolbarButtonsMD: toolbar,
+                    toolbarButtonsSM: toolbar
+                });
+            },
+            //初始化layui布局
+            layuiLoad:function(){
+                var _this = this;
+                layui.use(['form', 'upload', 'element', 'layer'], function() {
+                    var form = layui.form,
+                        layer=layui.layer,
+                        element = layui.element,
+                        upload = layui.upload;
+                    let isImg = '<%=list.goods_img%>';
+                    if(isImg){
+                        $('#imgBox').show();
+                    }else{
+                        $('#imgBox').hide();
+                    }
+                    $("#goods_type_id").find("option[value='<%=list.goods_type_id%>']").prop("selected",true);
+                    form.render('select');
+                    //表单验证
+                    _this.verify(form);
+                    //改变商品分类
+                    _this.openCate();
+                    //初始化相册
+                    _this.initPhotoView(form);
+                    //图片上传
+                    _this.upload(upload,layer);
+                    //初始化商品类型属性
+                    _this.initGoodsType(form);
+                    //改变商品类型
+                    _this.changeGoodsType(form,layer);
+                    //提交
+                    _this.submit(form,layer)
+                });
+            },
+            //批量文件上传
+            batchIUpload:function(){
+                $('#batchIUpload').diyUpload({
+                    url:'<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=800',
+                    success:function( res ) {
+                        console.info( res );
+                        var file = res.data[0].file
+                        $('#photoList').append('<input type="hidden" name="goods_image_list[]" value="'+file+'">');
+                    },
+                    error:function( err ) {
+                        console.info( err );	
+                    }
+                });
+            },
+            //初始化默认分类
+            initCate:function(){
+                console.log('<%-list.cate_id%>')
+                var cate = {};
+                for(var i=0;i<this.goodsCates.length;i++){
+                    if('<%-list.cate_id%>'==this.goodsCates[i]._id){
+                        cate=this.goodsCates[i];
+                        break;
+                    }
+                    for(var j=0;j<this.goodsCates[i].children.length;j++){
+                        if('<%-list.cate_id%>'==this.goodsCates[i].children[j]._id){
+                            cate=this.goodsCates[i].children[j];
+                            break;
+                        }
+                    }
+                }
+                $('#cate_name').val(cate.title)
+            },
+            //分类列表
+            changeCate:function(layer){
+                var _this = this;
+                var node = _this.zTreeObj.getNodeByParam("_id", $('#cate_id').val());
+                _this.zTreeObj.selectNode(node);
+                layer.open({
+                    type: 1,
+                    title: '商品分类',
+                    maxmin: true,
+                    area: ['300px', '400px'],
+                    btn: ['确定', '取消'],
+                    content: $('#tree'),
+                    yes: function(index, layero){
+                        var selectNode=_this.zTreeObj.getSelectedNodes();
+                        console.log(selectNode)
+                        if(selectNode.length>0){
+                            $('#cate_id').val(selectNode[0]._id);
+                            $('#cate_name').val(selectNode[0].title)
+                        }else{
+                            $('#cate_id').val(_this.goodsCates[0]._id)
+                            $('#cate_name').val(_this.goodsCates[0].title)
+                        }
+                        layer.close(index)
+                    }
+                    ,btn2: function(index, layero){
+                        return true
+                    }
+                });
+            },
+            //打开所属模块弹窗
+            openCate:function(){
+                var _this = this;
+                $('#cate_name').focus(function(){
+                    $('#cate_name').blur()
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        _this.changeCate(layer);
+                    })
+                })
+            },
+            //表单验证
+            verify:function(form){
+                form.verify({
+                    title: function(value){
+                        if(value.length<1){
+                            return '商品标题不能为空';
+                        }
+                    },
+                    sub_title: function(value){
+                        if(value.length<1){
+                            return '附属标题不能为空';
+                        }
+                    },
+                    price: function(value){
+                        if(value.length<1){
+                            return '价格不能为空';
+                        }else if(isNaN(value)){
+                            return '价格不能为非数字';
+                        }
+                    },
+                    sort: function(value){
+                        if(value.length<1){
+                            return '排序不能为空';
+                        }else if(isNaN(value)){
+                            return '排序不能为非数字';
+                        }
+                    },
+                    goods_number:function(value){
+                        if(value.length<1){
+                            return '商品库存不能为空';
+                        }else if(isNaN(value)){
+                            return '商品库存不能为非数字';
+                        }
+                    },
+                    old_price: function(value){
+                        if(value.length<1){
+                            return '价格不能为空';
+                        }else if(isNaN(value)){
+                            return '价格不能为非数字';
+                        }
+                    }
+                });
+            },
+            //图片上传
+            upload:function(upload,layer){
+                //上传图片
+                var uploadInst = upload.render({
+                    elem: '#upload', //绑定元素
+                    url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=800", //上传接口
+                    done: function(res){
+                        //上传完毕回调
                         if(res.code===0){
                             layer.msg(res.msg);
-                            setTimeout(function(){
-                                window.location.href = "<%=adminName%>/goodsCate"
-                            },500)
+                            $('#imgBox').show()
+                            var html = '';
+                            for(var i=0;i<res.data.length;i++){
+                                html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="goods_img" value="'+res.data[i]['file']+'">';
+                            }
+                            $('#imgs').html(html)
+                            $('#imgs').find('img').on('click',function(){
+                                var src = $(this).attr('src');
+                                var h = $(this).height();
+                                var w = $(this).width();
+                                var area = '500px';
+                                if(h>w){
+                                    area = '400px';
+                                }else if(h<w){
+                                    area = '700px';
+                                }
+                                layer.open({
+                                    area: area,
+                                    title: '图片预览',
+                                    content: '<img src="'+src+'" width="100%">',
+                                }); 
+                            })
                         }else{
                             layer.msg(res.msg);
                         }
-                        
                     },
-                    error:function(err){
-                        layer.msg('后台出错');
+                    error: function(){
+                    //请求异常回调
+                        layer.msg('请求出错');
                     }
+                });
+            },
+            //改变商品类型
+            changeGoodsType:function(form,layer){
+                var _this = this
+                form.on('select(goods_type_id)', function(data){
+                    var val = data.value;
+                    if(val=='<%-list.goods_type_id%>'){
+                        _this.initGoodsType(form)
+                    }else{
+                        console.log(data)
+                        $.ajax({
+                            type:'get',
+                            data:{
+                                id:val,
+                                _csrf:'<%=csrf%>'
+                            },
+                            dataType:'json',
+                            url:'<%=adminName%>/goods/goodsTypeAttribute',
+                            success:function(res){
+                                var data = res.data;
+                                //goods_type_attribute
+                                var html = "";
+                                for(var i=0;i<data.length;i++){
+                                    html+='<div class="layui-form-item">';
+                                    html+='<label class="layui-form-label">'+data[i].title+'</label>';
+                                    html+='<div class="layui-input-block">';
+                                    if(data[i].attr_type==1){
+                                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i]._id+'"/>';
+                                        html+='<input class="layui-input" type="text" name="attr_value_list[]"/>';
+                                    }else if(data[i].attr_type==2){
+                                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i]._id+'"/>';
+                                        html+='<textarea name="attr_value_list[]" class="layui-textarea"></textarea>';
+                                    }else if(data[i].attr_type==3){
+                                        var arr = data[i].attr_value.split(',');
+                                        console.log(arr)
+                                        html+='<input type="hidden" name="attr_id_list[]" value="'+data[i]._id+'"/>';
+                                        html+='<select name="attr_value_list[]" lay-verify="attrtype_'+data[i]._id+'" lay-filter="attrtype_'+data[i]._id+'">';
+                                            for(var j=0;j<arr.length;j++){
+                                                html+='<option value="'+arr[j]+'">'+arr[j]+'</option>';
+                                            }
+                                        html+='</select>';
+                                    }
+                                    html+='</div>';
+                                    html+='</div>';     
+                                }
+                                $('#goods_type_attribute').html(html);
+                                form.render();
+                            },
+                            error:function(err){
+                                layer.msg('后台出错');
+                            }
+                        })
+                    }
+                });
+            },
+            submit:function(form,layer){
+                //监听提交
+                form.on('submit(editGoods)', function(data) {
+                    data.field._csrf = "<%=csrf%>";
+                    data.field.id = "<%=id%>";
+                    data.field.status = data.field.status?1:0;
+                    data.field.is_shelf = data.field.is_shelf?1:0;
+                    data.field.is_best = data.field.is_best?1:0;
+                    data.field.is_hot = data.field.is_hot?1:0;
+                    data.field.is_new = data.field.is_new?1:0;
+                    data.field.goods_content = $('#content').froalaEditor('html.get');
+                    if(!data.field.goods_img){
+                        data.field.goods_img = ""
+                    }
+                    console.log(data.field)
+                    $.ajax({
+                        type:'post',
+                        data:data.field,
+                        dataType:'json',
+                        url:'<%=adminName%>/goods/doedit',
+                        success:function(res){
+                            console.log(res);
+                            if(res.code===0){
+                                layer.msg(res.msg);
+                                setTimeout(function(){
+                                    window.location.href = "<%=adminName%>/goods"
+                                },500)
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        },
+                        error:function(err){
+                            layer.msg('后台出错');
+                        }
+                    })
+                    return false;
                 })
-                return false;
-            })
-        })
+            },
+        }
+        //初始化
+        AddGoods.init()
+        
     </script>
 </body>
 </html>

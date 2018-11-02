@@ -16,7 +16,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">用户名</label>
                             <div class="layui-input-block">
-                                <input type="text" value="<%=list.username%>"  disabled required class="layui-input" lay-verify="required" placeholder="请输入管理员用户名">
+                                <input type="text" value="<%=list.username%>"  disabled class="layui-input" lay-verify="required" placeholder="请输入管理员用户名">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -28,13 +28,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">管理员手机</label>
                             <div class="layui-input-block">
-                                <input type="phone" id="mobile" value="<%=list.mobile%>" name="mobile" class="layui-input" placeholder="请输入管理员手机">
+                                <input type="phone" value="<%=list.mobile%>" name="mobile" lay-verify="mobile" class="layui-input" placeholder="请输入管理员手机">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">管理员邮箱</label>
                             <div class="layui-input-block">
-                                <input type="email" id="email" value="<%=list.email%>" name="email" class="layui-input" placeholder="请输入管理员邮箱">
+                                <input type="email" value="<%=list.email%>" name="email" lay-verify="email" class="layui-input" placeholder="请输入管理员邮箱">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -78,7 +78,18 @@
                 layer = layui.layer,
                 layedit = layui.layedit,
                 $ = layui.jquery;
-
+            
+            //自定义验证规则
+            form.verify({
+                username: function(value) {
+                    if(value.length < 3) {
+                        return '用户名至少得3个字符';
+                    }
+                },
+                password: [/(.+){6,12}$/, '密码必须6到12位'],
+                mobile:[/^1[34578][0-9]{9}$/,'手机号码格式出错'],
+                email:[/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/, '邮箱格式出错'],
+            });
             //设置默认选择
             $("#selected").find("option[value='<%=list.role_id%>']").prop("selected",true);
             form.render('select');

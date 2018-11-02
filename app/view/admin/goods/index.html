@@ -17,7 +17,7 @@
 <body class="main_body">
 	<blockquote class="layui-elem-quote news_search">
 		<div class="layui-inline">
-			<a href="<%=adminName%>/goodsCate/add" class="layui-btn layui-btn-normal newsAdd_btn">添加商品分类</a>
+			<a href="<%=adminName%>/goods/add" class="layui-btn layui-btn-normal newsAdd_btn">添加商品</a>
 		</div>
 	</blockquote>
 	<div style="padding:0 10px ;">
@@ -26,74 +26,88 @@
 		</div>
 	</div>
 	<script type="text/html" id="btnTpl">
-		<a href="<%=adminName%>/goodsCate/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<a href="<%=adminName%>/goods/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
 		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
 	</script>
-	<script type="text/html" id="switchTpl">
-		<input lay-filter="switchTest" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" name="switch" lay-skin="switch">
+	<script type="text/html" id="shelfTpl">
+		<input lay-filter="is_shelf" type="checkbox" name='is_shelf' data-id="{{d._id}}" {{d.is_shelf==1?'checked':''}} lay-text="是|否" lay-skin="switch">
+	</script>
+	<script type="text/html" id="typeTpl">
+		<input lay-filter="status" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" lay-skin="switch">
+	</script>
+	<script type="text/html" id="bestTpl">
+		<input lay-filter="is_best" type="checkbox" name='is_best' data-id="{{d._id}}" {{d.is_best==1?'checked':''}} lay-text="是|否" lay-skin="switch">
+	</script>
+	<script type="text/html" id="hotTpl">
+		<input lay-filter="is_hot" type="checkbox" name='is_hot' data-id="{{d._id}}" {{d.is_hot==1?'checked':''}} lay-text="是|否" lay-skin="switch">
+	</script>
+	<script type="text/html" id="newTpl">
+		<input lay-filter="is_new" type="checkbox" name='is_new' data-id="{{d._id}}" {{d.is_new==1?'checked':''}} lay-text="是|否" lay-skin="switch">
+	</script>
+	<script type="text/html" id="numberTpl">
+		<input style='width:70px;height:26px;' type="text" value="{{d.goods_number}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input goods-number-btn">
 	</script>
 	<script type="text/html" id="sortTpl">
 		<input style='width:50px;height:26px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
 	</script>
 	<script type="text/html" id="imgTpl">
-		{{#  if(d.cate_img){ }}
-		<img width='60' src='{{d.cate_img}}' class='img'/>
+		{{#  if(d.goods_img){ }}
+		<img width='60' src='{{d.goods_img}}' class='img'/>
 		{{#  } }}
 	</script>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
 	<script type="text/javascript" src="/public/admin/js/index.js"></script>
 	<script type="text/javascript" src="/public/admin/js/util.js"></script>
 	<script>
-		layui.config({
-			base:'/public/admin/module/'
-		}).extend({
-        	treetable: 'treetable-lay/treetable'
-    	}).use(['form','layer','jquery','table', 'treetable'],function(){
+		layui.use(['form','layer','jquery','table'],function(){
 			var form = layui.form,
 				layer =layui.layer,
 				table = layui.table,
-				treetable = layui.treetable,
 				$ = layui.jquery;
 
-			var treeResult =JSON.parse('<%-list%>');
 			var renderTable = function () {
-				treetable.render({
-					treeColIndex: 1,
-					treeSpid: "0",
-					height: 'full-100',
-					treeIdName: '_id',
-					treePidName: 'pid',
-					treeDefaultClose: false,
-					treeLinkage: true,
+				table.render({
 					elem: '#table',
-					data: treeResult,
-					limits:[1000],
-					page: false,
+					height: 'full-100',
+					method:'post',
+					url:'<%=adminName%>/goods?_csrf=<%=csrf%>', //数据接口
 					cols: [[ //表头
-						{type: 'numbers'},
-						{field: 'title', title: '分类名称',},
-						{field: 'img', align:'center', title: '分类图片',templet:'#imgTpl'},
-						{field: 'sort',align:'center', title: '排序',templet:'#sortTpl'},
-						{field: 'status', title: '状态', width: 95, templet:'#switchTpl'},
-						{field: '', title: '操作',align:'center', width: 150, fixed: 'right',templet:'#btnTpl'},
+						{type:'checkbox'},
+						{field: 'goods_img', align:'center', width: 110, title: '商品图片',templet:'#imgTpl'},
+						{field: 'title', align:'center', title: '商品名称'},
+						{field: '_id', align:'center', title: '商品ID'},
+						// {field: '', align:'center', title: '货号'},
+						{field: 'shop_price', align:'center',width: 100, title: '价格'},
+						{field: 'click_count', align:'center', width: 100,title: '点击量'},
+						{field: 'is_delete', align:'center',width: 80, title: '上架', templet:'#shelfTpl'},
+						{field: 'is_best', align:'center', width: 80,title: '精品',templet:'#bestTpl'},
+						{field: 'is_new', align:'center',width: 80, title: '新品',templet:'#newTpl'},
+						{field: 'is_hot', align:'center',width: 80, title: '热销',templet:'#hotTpl'},
+						{field: 'status', align:'center', width: 110, title: '状态',templet:'#typeTpl'},
+						{field: 'sort', align:'center',width: 80, title: '排序',templet:'#sortTpl'},
+						{field: 'goods_number', align:'center',width: 100, title: '库存',templet:'#numberTpl'},
+						{field: '', title: '操作',align:'center', width: 150,templet:'#btnTpl'},
 					]],
+					limit:10,
+					limits:[10,20,50,100],
+					page: true, //开启分页
 					done: function () {
 						//删除操作
 						$('.delete-btn').on('click',function(){
 							var id = $(this).attr('data-id');
 							// alert(id);
-							layer.confirm('是否删除该分类？',{
+							layer.confirm('是否删除该商品？',{
 								title:'警告',
-								content:'是否删除该分类？',
+								content:'是否删除该商品？',
 								btn: ['确认', '取消'], //可以无限个按钮
 							}, function(index, layero){
-								var url = '<%=adminName%>/goodsCate/delete';
+								var url = '<%=adminName%>/goods/delete';
 								var params = {
-									model:'GoodsCate',
+									model:'Goods',
 									id:id
 								}
 								//删除
-								reqAjax.delete('get', url, params, "<%=adminName%>/goodsCate");
+								reqAjax.delete('get', url, params, "<%=adminName%>/goods");
 
 							}, function(index){console.log('取消删除')});
 						})
@@ -110,9 +124,9 @@
 								$(this).focus();
 								return;
 							}
-							var url = '<%=adminName%>/goodsCate/change';
+							var url = '<%=adminName%>/goods/change';
 							var params = {
-								model:'GoodsCate',
+								model:'Goods',
 								attr:'sort',
 								value:val,
 								id:id
@@ -120,21 +134,103 @@
 							//改变
 							reqAjax.change('get', url, params)
 						})
+						//修改排序
+						$('.goods-number-btn').on('blur',function(){
+							var id = $(this).attr('data-id');
+							var val = $(this).val();
+							if(val==''){
+								layer.msg('请输入库存');
+								$(this).focus();
+								return;
+							}else if(isNaN(val)){
+								layer.msg('不是数字');
+								$(this).focus();
+								return;
+							}
+							var url = '<%=adminName%>/goods/change';
+							var params = {
+								model:'Goods',
+								attr:'goods_number',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
+						})
 						//状态改变
-						form.on('switch(switchTest)', function(data){
+						form.on('switch(status)', function(data){
 							var id = $(this).attr('data-id');
 							var val = this.checked;
 							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goodsCate/change';
+							var url = '<%=adminName%>/goods/change';
 							var params = {
-								model:'GoodsCate',
+								model:'Goods',
 								attr:'status',
 								value:val,
 								id:id
 							}
 							//改变
 							reqAjax.change('get', url, params)
-						
+						});
+						//上架改变
+						form.on('switch(is_shelf)', function(data){
+							var id = $(this).attr('data-id');
+							var val = this.checked;
+							if(val){val=1}else{val=0}
+							var url = '<%=adminName%>/goods/change';
+							var params = {
+								model:'Goods',
+								attr:'is_shelf',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
+						});
+						//精品改变
+						form.on('switch(is_best)', function(data){
+							var id = $(this).attr('data-id');
+							var val = this.checked;
+							if(val){val=1}else{val=0}
+							var url = '<%=adminName%>/goods/change';
+							var params = {
+								model:'Goods',
+								attr:'is_best',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
+						});
+						//新品改变
+						form.on('switch(is_new)', function(data){
+							var id = $(this).attr('data-id');
+							var val = this.checked;
+							if(val){val=1}else{val=0}
+							var url = '<%=adminName%>/goods/change';
+							var params = {
+								model:'Goods',
+								attr:'is_new',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
+						});
+						//热销改变
+						form.on('switch(is_hot)', function(data){
+							var id = $(this).attr('data-id');
+							var val = this.checked;
+							if(val){val=1}else{val=0}
+							var url = '<%=adminName%>/goods/change';
+							var params = {
+								model:'Goods',
+								attr:'is_hot',
+								value:val,
+								id:id
+							}
+							//改变
+							reqAjax.change('get', url, params)
 						});
 						$('.img').on('click',function(){
 							var src = $(this).attr('src');

@@ -71,11 +71,15 @@ module.exports = app => {
    app.router.get(app.adminName()+'/goodsCate/delete',app.controller.admin.goodsCate.delete);
    app.router.get(app.adminName()+'/goodsCate/change',app.controller.admin.goodsCate.change);
   //商品
-  // app.router.get(app.adminName()+'/goods',app.controller.admin.goods.index);
+  app.router.get(app.adminName()+'/goods',app.controller.admin.goods.index);
+  app.router.post(app.adminName()+'/goods',app.controller.admin.goods.list);
+  app.router.get(app.adminName()+'/goods/goodsTypeAttribute',app.controller.admin.goods.goodsTypeAttribute);
+  app.router.post(app.adminName()+'/goods/uploadImage',app.controller.admin.goods.uploadImage);
+  app.router.post(app.adminName()+'/goods',app.controller.admin.goods.list);
   app.router.get(app.adminName()+'/goods/add',app.controller.admin.goods.add);
-  // app.router.get(app.adminName()+'/goods/edit',app.controller.admin.goods.edit);
-  // app.router.post(app.adminName()+'/goods/doadd',app.controller.admin.goods.doAdd);
-  // app.router.post(app.adminName()+'/goods/doedit',app.controller.admin.goods.doEdit);
-  // app.router.get(app.adminName()+'/goods/delete',app.controller.admin.goods.delete);
-  // app.router.get(app.adminName()+'/goods/change',app.controller.admin.goods.change);
+  app.router.get(app.adminName()+'/goods/edit',app.controller.admin.goods.edit);
+  app.router.post(app.adminName()+'/goods/doadd',app.controller.admin.goods.doAdd);
+  app.router.post(app.adminName()+'/goods/doedit',app.controller.admin.goods.doEdit);
+  app.router.get(app.adminName()+'/goods/delete',app.controller.admin.goods.delete);
+  app.router.get(app.adminName()+'/goods/change',app.controller.admin.goods.change);
 }

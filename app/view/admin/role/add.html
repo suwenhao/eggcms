@@ -16,13 +16,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">角色名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="title" required class="layui-input newsName" lay-verify="required" placeholder="请输入角色名称">
+                                <input type="text" name="title" class="layui-input newsName" lay-verify="title" placeholder="请输入角色名称">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">角色描述</label>
                             <div class="layui-input-block">
-                                <textarea required name="description" placeholder="请输入角色描述" lay-verify="required" class="layui-textarea"></textarea>
+                                <textarea name="description" placeholder="请输入角色描述" lay-verify="description" class="layui-textarea"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -46,8 +46,15 @@
             //自定义验证规则
             form.verify({
                 title: function(value) {
-                    if(value.length < 3) {
-                        return '至少得3个字符';
+                    if(value.length == 0) {
+                        return '请输入角色名称';
+                    }else if(value.length<3){
+                        return '角色名称不能小于3个字符';
+                    }
+                },
+                description: function(value) {
+                    if(value.length == 0) {
+                        return '请输入角色描述';
                     }
                 }
             });

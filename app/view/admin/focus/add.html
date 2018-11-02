@@ -26,13 +26,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="title" placeholder="请输入名称" required class="layui-input" lay-verify="required">
+                                <input type="text" name="title" placeholder="请输入名称" class="layui-input" lay-verify="title">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">跳转地址</label>
                             <div class="layui-input-block">
-                                <input type="text" name="link" placeholder="请输入跳转地址" required class="layui-input" lay-verify="required" >
+                                <input type="text" name="link" placeholder="请输入跳转地址,默认空" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -52,7 +52,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">排序</label>
                             <div class="layui-input-block">
-                                <input required name="sort" placeholder="请输入排序" lay-verify="required" class="layui-input"/>
+                                <input name="sort" placeholder="请输入排序" lay-verify="sort" class="layui-input" value="1"/>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -78,8 +78,25 @@
     <script>
          layui.use(['form','jquery', 'upload'], function() {
             var form = layui.form,
-                $ = layui.jquery;
-            var upload = layui.upload;
+                $ = layui.jquery,
+                upload = layui.upload;
+
+            //自定义验证规则
+            form.verify({
+                title: function(value) {
+                    if(value.length ==0 ) {
+                        return '请输入名称';
+                    }
+                },
+                sort: function(value) {
+                    if(value.length ==0 ) {
+                        return '请输入排序';
+                    }else if(isNaN(value)){
+                        return '排序不能是非数字';
+                    }
+                },
+            });
+
             $('#imgBox').hide()
             //上传图片
             var uploadInst = upload.render({

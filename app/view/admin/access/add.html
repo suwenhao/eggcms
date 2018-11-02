@@ -17,7 +17,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">模块名称</label>
                             <div class="layui-input-block">
-                                <input type="text"  name="module_name" required class="layui-input" lay-verify="required" placeholder="请输入模块名称">
+                                <input type="text"  name="module_name" class="layui-input" lay-verify="module_name" placeholder="请输入模块名称">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -34,7 +34,6 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">所属模块</label>
                                 <div class="layui-input-inline">
-                                    
                                     <input type="hidden" id="module_id" name='module_id' value="0">
                                     <input type="text" value="顶级模块" id="module" name="module" class="layui-input">
                                 </div>
@@ -43,13 +42,13 @@
                         <div class="layui-form-item">
                                 <label class="layui-form-label">权限图标</label>
                                 <div class="layui-input-block">
-                                    <input type="text" id='icon' name="icon"  class="layui-input" placeholder="请输入图标class">
+                                    <input type="text" id='icon' name="icon"  class="layui-input" placeholder="请输入图标class,默认空">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">菜单模块</label>
                                 <div class="layui-input-block">
-                                    <input type="text" id='model' name="model"  class="layui-input" placeholder="请输入菜单模块">
+                                    <input type="text" id='model' name="model"  class="layui-input" placeholder="请输入菜单模块,默认空">
                                 </div>
                             </div>
                         <div class="layui-form-item" id="actionNameBox">
@@ -103,12 +102,14 @@
                 _id:'0',
                 children:moduleList
             },
+            //初始化
             init:function(){
                 console.log(this.moduleList)
                 this.createTree()
                 this.openModule()
                 this.laodLayui()
             },
+            //生成树
             createTree:function(){
                 this.zTreeObj = $.fn.zTree.init($("#tree"), {
                     data:{
@@ -121,6 +122,7 @@
                 }, this.moduleList);
                 this.zTreeObj.expandAll(true);
             },
+            //所属模块
             changeAccess:function(layer){
                 var _this = this;
                 var node = _this.zTreeObj.getNodeByParam("_id", $('#module_id').val());
@@ -149,6 +151,7 @@
                     }
                 });
             },
+            //打开所属模块弹窗
             openModule:function(){
                 var _this = this;
                 $('#module').focus(function(){
@@ -159,10 +162,26 @@
                     })
                 })
             },
+            //表单验证
+            verify:function(form){
+                form.verify({
+                    module_name: function(value) {
+                        if(value.length == 0) {
+                            return '请输入模块名称';
+                        }else if(value.length<2){
+                            return '模块名称不能小于2个字符';
+                        }
+                    }
+                });
+            },
             laodLayui:function(){
+                var _this = this
                 layui.use(['form', 'layer'], function() {
                     var form = layui.form,
                         layer = layui.layer;
+
+                    //自定义验证规则
+                    _this.verify(form);
 
                     var typeVal = '1';
                     $('#actionNameBox').hide();

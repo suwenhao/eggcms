@@ -49,10 +49,17 @@ class IndexController extends BaseController {
     async noauth() {
         await this.ctx.render('admin/auth');
     }
+    /**
+     * urlParams  jimp 任何值不等于空就代表压缩图片并修改分辨率
+     * urlParams  size 压缩的尺寸单位px
+     * urlParams  old  压缩时是否保存原图
+     */
     async upload(){
         let parts = this.ctx.multipart({autoFields:true});
         //是否缩略图参数
         let flag = this.ctx.request.query.jimp;
+        var size = this.ctx.request.query.size;
+        var oldImage = this.ctx.request.query.old;
         let stream;
         let files=[];
         while((stream = await parts()) != null){
@@ -75,18 +82,23 @@ class IndexController extends BaseController {
             }
             
             if(flag){
-                let pathsrc = dir.saveDir + '_200x200'+path.extname(dir.saveDir);
+                let imageSize = size?parseInt(size):200;
+                let SizeText = `_${size}x${size}`;
+                let pathsrc = dir.saveDir + SizeText + path.extname(dir.saveDir);
                 Jimp.read(target, (err, lenna) => {
                     if (err) throw err;
                     lenna
-                    .resize(200, 200) // resize
-                    .quality(60) // set JPEG quality
-                    .write(target + '_200x200'+path.extname(target)); // save
+                    .resize(imageSize, imageSize) // resize
+                    .quality(80) // set JPEG quality
+                    .write(target + SizeText + path.extname(target)); // save
                 })
-                //原图
-                await this.ctx.model.Image.create({
-                    src:dir.saveDir
-                })
+                if(oldImage){
+                    //原图
+                    await this.ctx.model.Image.create({
+                        src:dir.saveDir
+                    })
+                }
+                
                 //缩略图
                 let res = await this.ctx.model.Image.create({
                     src:pathsrc
