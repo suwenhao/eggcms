@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>增加导航</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加导航</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">导航名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" class="layui-input" lay-verify="title" placeholder="请输入导航名称">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">导航位置</label>
+                            <div class="layui-input-block">
+                                <select id="position" name="position" class="position" lay-filter="position">
+                                    <option value="1">顶部</option>
+                                    <option selected value="2">中间</option>
+                                    <option value="3">底部</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">关联商品</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="relation" placeholder="请输入关联商品" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">链接地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="link" class="layui-input" placeholder="导航链接地址">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">导航打开</label>
+                            <div class="layui-input-block">
+                                <select id="is_opennew" name="is_opennew" class="is_opennew" lay-filter="is_opennew">
+                                    <option value="1">新窗口打开</option>
+                                    <option selected value="2">本窗口打开</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="sort" class="layui-input"  lay-verify="sort" placeholder="请输入排序">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="addNav">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <a href="<%=adminName%>/nav" class="layui-btn layui-btn-primary">返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form','jquery'], function() {
+            var form = layui.form,
+                $ = layui.jquery;
+            //自定义验证规则
+            form.verify({
+                title: function(value) {
+                    if(value.length == 0) {
+                        return '请输入导航名称';
+                    }else if(value.length<1){
+                        return '导航名称不能小于1个字符';
+                    }
+                },
+                sort: function(value) {
+                    if(isNaN(value)) {
+                        return '排序必须是数字';
+                    }else if(value==""){
+                        return '排序不能为空';
+                    }
+                }
+            });
+            //监听提交
+            form.on('submit(addNav)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                
+                if(data.field.status){
+                    data.field.status = 1
+                }else{
+                    data.field.status = 0
+                }
+                console.log(data.field)
+                $('#addNav').attr('disabled',true);
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/nav/doadd',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/nav"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                            $('#addNav').removeAttr('disabled');
+                        }
+                        
+                    },
+                    error:function(err){
+                        layer.msg('后台出错');
+                        $('#addNav').removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

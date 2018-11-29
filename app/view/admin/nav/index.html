@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>导航列表</title>
+	<!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+	<blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+			<div class="layui-input-inline">
+				<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
+			</div>
+			<a class="layui-btn search_btn">查询</a>
+		</div>
+		<div class="layui-inline">
+			<a href="<%=adminName%>/nav/add" class="layui-btn layui-btn-normal newsAdd_btn">添加导航</a>
+		</div>
+	</blockquote>
+	<div style="padding:0 10px ;">
+		<div class="layui-form news_list">
+			<table id="table"></table>
+		</div>
+	</div>
+	<script type="text/html" id="btnTpl">
+		<a href="<%=adminName%>/nav/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
+	</script>
+	<script type="text/html" id="sortTpl">
+		<input style='width:50px;height:26px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
+	</script>
+	<script type="text/html" id="switchTpl">
+		<input lay-filter="switchTest" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" name="switch" lay-skin="switch">
+	</script>
+	<script type="text/html" id="openTpl">
+		{{#  if(d.is_opennew==2){ }}
+		<button class="layui-btn layui-btn-sm" data-id='{{d._id}}'>否</button>
+		{{#  }else{ }}
+		<button class="layui-btn layui-btn-sm" data-id='{{d._id}}'>是</button>
+		{{#  } }}
+	</script>
+	<script type="text/html" id="positionTpl">
+		{{#  if(d.position==1){ }}
+		<button class="layui-btn layui-btn-sm" data-id='{{d._id}}'>顶部</button>
+		{{#  }else if(d.position==2){ }}
+		<button class="layui-btn layui-btn-sm" data-id='{{d._id}}'>中间</button>
+		{{#  }else{ }}
+		<button class="layui-btn layui-btn-sm" data-id='{{d._id}}'>底部</button>
+		{{#  } }}
+	</script>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+	<script type="text/javascript" src="/public/admin/js/index.js"></script>
+	<script type="text/javascript" src="/public/admin/js/util.js"></script>
+	<script>
+		layui.use(['form','layer','jquery','table'],function(){
+			var form = layui.form,
+				layer =layui.layer,
+				table = layui.table,
+				$ = layui.jquery;
+			var data =JSON.parse('<%-list%>');
+			//第一个实例
+			table.render({
+				elem: '#table',
+				height: 'full-100',
+				data:data, //数据接口
+				page: true, //开启分页
+				limit:10,
+				limits:[10,20,50,100],
+				cols: [[ //表头
+					{type:'checkbox'},
+					{field: 'title', title: '导航名称'},
+					{field: 'link', title: '导航链接'},
+					{field: 'relation', title: '导航关联'},
+					{field: 'is_opennew', align:'center',width: 110,  title: '新窗口打开', templet:'#openTpl'},
+					{field: 'position', title: '导航位置', align:'center',width: 100, templet:'#positionTpl'},
+					{field: 'sort', align:'center',width: 80, title: '排序', templet:'#sortTpl'},
+					{field: 'status', title: '状态', width: 95, templet:'#switchTpl'},
+					{field: '', title: '操作',align:'center', width: 140, fixed: 'right',templet:'#btnTpl'},
+				]],
+				done:function(){
+					//删除
+					$('.delete-btn').on('click',function(){
+						var id = $(this).attr('data-id');
+						// alert(id);
+						layer.confirm('是否删除该角色？',{
+							title:'警告',
+							content:'是否删除该角色？',
+							btn: ['确认', '取消'], //可以无限个按钮
+						}, function(index, layero){
+							var url = '<%=adminName%>/nav/delete';
+							var params = {
+								model:'Nav',
+								id:id
+							}
+							//删除
+							reqAjax.delete('get', url, params, "<%=adminName%>/nav");
+							
+						}, function(index){console.log('取消删除')});
+					})
+					//状态改变
+					form.on('switch(switchTest)', function(data){
+						var id = $(this).attr('data-id');
+						var val = this.checked;
+						if(val){val=1}else{val=0}
+						var url = '<%=adminName%>/nav/change';
+						var params = {
+							model:'Nav',
+							attr:'status',
+							value:val,
+							id:id
+						}
+						//改变
+						reqAjax.change('get', url, params)
+					});
+					//修改排序
+					$('.change-btn').on('blur',function(){
+						var id = $(this).attr('data-id');
+						var val = $(this).val();
+						if(val==''){
+							layer.msg('请输入排序');
+							$(this).focus();
+							return;
+						}else if(isNaN(val)){
+							layer.msg('不是数字');
+							$(this).focus();
+							return;
+						}
+						var url = '<%=adminName%>/nav/change';
+						var params = {
+							model:'Nav',
+							attr:'sort',
+							value:val,
+							id:id
+						}
+						//改变
+						reqAjax.change('get', url, params)
+					})
+				}
+			});
+			
+		})
+
+	</script>
+</body>
+</html>

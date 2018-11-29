@@ -7,12 +7,12 @@ module.exports = app => {
     const FocusSchema = new Schema({
       title: { type: String},
       type: { type: Number},
-      img_id: { type:Schema.Types.ObjectId, },   
-      link: { type: String  },   
-      sort: { type: Number  },   
-      status: { type: Number,default:1  },    
-      add_time: {           
-        type:Number,        
+      img_id: { type:Schema.Types.ObjectId, },
+      link: { type: String  },
+      sort: { type: Number  },
+      status: { type: Number,default:1  },
+      add_time: {
+        type:Number,
         default: d.getTime()    
        }
     });

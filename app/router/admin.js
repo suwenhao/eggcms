@@ -82,4 +82,12 @@ module.exports = app => {
   app.router.post(app.adminName()+'/goods/doedit',app.controller.admin.goods.doEdit);
   app.router.get(app.adminName()+'/goods/delete',app.controller.admin.goods.delete);
   app.router.get(app.adminName()+'/goods/change',app.controller.admin.goods.change);
+   //导航
+   app.router.get(app.adminName()+'/nav',app.controller.admin.nav.index);
+   app.router.get(app.adminName()+'/nav/add',app.controller.admin.nav.add);
+   app.router.get(app.adminName()+'/nav/edit',app.controller.admin.nav.edit);
+   app.router.post(app.adminName()+'/nav/doadd',app.controller.admin.nav.doAdd);
+   app.router.post(app.adminName()+'/nav/doedit',app.controller.admin.nav.doEdit);
+   app.router.get(app.adminName()+'/nav/delete',app.controller.admin.nav.delete);
+   app.router.get(app.adminName()+'/nav/change',app.controller.admin.nav.change);
 }
