@@ -75,7 +75,6 @@ module.exports = app => {
   app.router.post(app.adminName()+'/goods',app.controller.admin.goods.list);
   app.router.get(app.adminName()+'/goods/goodsTypeAttribute',app.controller.admin.goods.goodsTypeAttribute);
   app.router.post(app.adminName()+'/goods/uploadImage',app.controller.admin.goods.uploadImage);
-  app.router.post(app.adminName()+'/goods',app.controller.admin.goods.list);
   app.router.get(app.adminName()+'/goods/add',app.controller.admin.goods.add);
   app.router.get(app.adminName()+'/goods/edit',app.controller.admin.goods.edit);
   app.router.post(app.adminName()+'/goods/doadd',app.controller.admin.goods.doAdd);
@@ -100,6 +99,7 @@ module.exports = app => {
   app.router.get(app.adminName()+'/articleCate/change',app.controller.admin.articleCate.change);
   //文章管理
   app.router.get(app.adminName()+'/article',app.controller.admin.article.index);
+  app.router.post(app.adminName()+'/article',app.controller.admin.article.list);
   app.router.get(app.adminName()+'/article/add',app.controller.admin.article.add);
   app.router.post(app.adminName()+'/article/doadd',app.controller.admin.article.doAdd);
   app.router.get(app.adminName()+'/article/edit',app.controller.admin.article.edit);

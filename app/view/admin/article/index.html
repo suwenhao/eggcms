@@ -38,14 +38,11 @@
 	<script type="text/html" id="sortTpl">
 		<input style='width:50px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
 	</script>
-	<script type="text/html" id="timeTpl">
-		<div>{{d.add_time}}</div>
-	</script>
 	<script type="text/html" id="imgTpl">
-		<div><img src="{{d.img.src}}" alt="" class="img"></div>
+		<div><img src="{{d.article_img}}" alt="" class="img"></div>
 	</script>
-	<script type="text/html" id="typeTpl">
-		{{d.type==1?"<button class='layui-btn layui-btn-sm'>网站</button>":d.type==2?"<button class='layui-btn layui-btn-normal layui-btn-sm'>APP</button>":"<button class='layui-btn layui-btn-warm layui-btn-sm'>小程序</button>"}}
+	<script type="text/html" id="cateTpl">
+		{{d.cate[0].title}}
 	</script>
 	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
 	<script type="text/javascript" src="/public/admin/js/index.js"></script>
@@ -56,23 +53,23 @@
 				layer =layui.layer,
 				table = layui.table,
 				$ = layui.jquery;
-			var data =JSON.parse('<%-list%>');
 			//第一个实例
 			table.render({
 				elem: '#table',
 				height: 'full-100',
-				data:data, //数据接口
+				url:'<%=adminName%>/article?_csrf=<%=csrf%>', //数据接口
+				method:'post',
 				page: true, //开启分页
 				limit:10,
 				limits:[10,20,50,100],
 				cols: [[ //表头
-					{field: 'type',align:'center', title: '分类',templet:'#typeTpl',width:90},
 					{field: 'title', title: '文章名称'},
+					{field: 'cate_id', align:'center', title: '分类',width:100,templet:'#cateTpl'},
 					{field: 'link', title: '文章链接'},
-					{field: 'img', align:'center', title: '文章封面',templet:'#imgTpl'},
+					{field: 'article_img', align:'center', title: '文章封面',templet:'#imgTpl'},
 					{field: 'sort', align:'center', width:80, title: '排序', sort: true,templet:'#sortTpl'},
 					{field: 'status', align:'center', title: '状态', width: 95, templet:'#switchTpl'},
-					{field: 'add_time', title: '时间',templet:'#timeTpl'},
+					{field: 'time', title: '时间',},
 					{field: '', title: '操作',align:'center', width: 150,fixed: 'right',templet:'#btnTpl'},
 				]],
 				done:function(){

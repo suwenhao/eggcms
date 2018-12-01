@@ -271,7 +271,7 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit lay-filter="editGoods">立即提交</button>
+                        <button class="layui-btn" lay-submit lay-filter="editGoods">保存修改</button>
                         <a href="<%=adminName%>/goods" class="layui-btn layui-btn-primary">返回</a>
                     </div>
                 </div>
@@ -289,7 +289,7 @@
     <script src="/public/admin/lib/diyUpload/js/webuploader.html5only.min.js"></script>
     <script src="/public/admin/lib/diyUpload/js/diyUpload.js"></script>
     <script>
-        var AddGoods = {
+        var EditGoods = {
             //分类树数据
             goodsCates:JSON.parse('<%-goodsCates%>'),
             //初始化
@@ -428,7 +428,7 @@
             },
             //初始化富文本
             createText:function(){
-                let toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
+                var toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
                 this.contentText = $('#content').froalaEditor({
 
                     height: 400,    //给编辑器设置默认的高度
@@ -448,7 +448,7 @@
                         layer=layui.layer,
                         element = layui.element,
                         upload = layui.upload;
-                    let isImg = '<%=list.goods_img%>';
+                    var isImg = '<%=list.goods_img%>';
                     if(isImg){
                         $('#imgBox').show();
                     }else{
@@ -726,7 +726,7 @@
             },
         }
         //初始化
-        AddGoods.init()
+        EditGoods.init()
         
     </script>
 </body>

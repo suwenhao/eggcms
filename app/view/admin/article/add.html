@@ -155,7 +155,7 @@
             },
             //初始化富文本
             createText:function(){
-                let toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
+                var toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
                 this.contentText = $('#content').froalaEditor({
 
                     height: 400,    //给编辑器设置默认的高度
@@ -253,7 +253,7 @@
                 //上传图片
                 var uploadInst = upload.render({
                     elem: '#upload', //绑定元素
-                    url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=800", //上传接口
+                    url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=500", //上传接口
                     done: function(res){
                         //上传完毕回调
                         if(res.code===0){
