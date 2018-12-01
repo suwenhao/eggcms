@@ -90,4 +90,12 @@ module.exports = app => {
    app.router.post(app.adminName()+'/nav/doedit',app.controller.admin.nav.doEdit);
    app.router.get(app.adminName()+'/nav/delete',app.controller.admin.nav.delete);
    app.router.get(app.adminName()+'/nav/change',app.controller.admin.nav.change);
+  //商品分类
+  app.router.get(app.adminName()+'/articleCate',app.controller.admin.articleCate.index);
+  app.router.get(app.adminName()+'/articleCate/add',app.controller.admin.articleCate.add);
+  app.router.get(app.adminName()+'/articleCate/edit',app.controller.admin.articleCate.edit);
+  app.router.post(app.adminName()+'/articleCate/doadd',app.controller.admin.articleCate.doAdd);
+  app.router.post(app.adminName()+'/articleCate/doedit',app.controller.admin.articleCate.doEdit);
+  app.router.get(app.adminName()+'/articleCate/delete',app.controller.admin.articleCate.delete);
+  app.router.get(app.adminName()+'/articleCate/change',app.controller.admin.articleCate.change);
 }

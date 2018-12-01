@@ -5,6 +5,7 @@ const util = require('../../core/util.js')
 class NavController extends Controller {
     async index() {
         let list = await this.service.nav.getList();
+        list.sort(util.compare)
         await this.ctx.render('admin/nav/index',{
             list:JSON.stringify(list)
         });

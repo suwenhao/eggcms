@@ -15,7 +15,7 @@ module.exports = app => {
     sub_title: {type:String},
     keywords:{type:String},
     description: {type:String},
-    sort: {type: Number},
+    sort: {type: Number,default:1},
     status: {type: Number, default:1},
     add_time: {           
       type: Number,

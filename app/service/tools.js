@@ -95,6 +95,7 @@ class ToolsService extends Service {
             this.app.adminName()+'/goods/goodsTypeAttribute',
             this.app.adminName()+'/goods/uploadImage',
             this.app.adminName()+'/nav/change',
+            this.app.adminName()+'/articleCate/change',
         ]
     
         if(ignoreUrl.indexOf(pathname)!=-1 || userinfo.is_super==1){
