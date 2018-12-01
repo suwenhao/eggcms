@@ -2,17 +2,17 @@
 
 const Service = require('egg').Service;
 
-class FocusService extends Service {
-  async add(newFocus) {
-    let res = await this.ctx.model.Focus.create(newFocus);
+class ArticleService extends Service {
+  async add(newArticle) {
+    let res = await this.ctx.model.Article.create(newArticle);
     if(res){
         return {code:0,msg:'增加成功'}
     }else{
         return {code:1,msg:'增加失败'}
     }
   }
-  async edit(newFocus) {
-    let res = await this.ctx.model.Focus.updateOne({'_id':newFocus.id},newFocus);
+  async edit(newArticle) {
+    let res = await this.ctx.model.Article.updateOne({'_id':newArticle.id},newArticle);
     if(res){
         return {code:0,msg:'修改成功'}
     }else{
@@ -20,7 +20,7 @@ class FocusService extends Service {
     }
   }
   async list(){
-    let res = await this.ctx.model.Focus.aggregate([
+    let res = await this.ctx.model.Article.aggregate([
       {
         $lookup:{
           from:'image',
@@ -32,9 +32,9 @@ class FocusService extends Service {
     ]);
     return res;
   }
-  async getFocus(id){
+  async getArticle(id){
     try {
-        let res = await this.ctx.model.Focus.aggregate([
+        let res = await this.ctx.model.Article.aggregate([
           {
             $lookup:{
               from:'image',
@@ -54,4 +54,4 @@ class FocusService extends Service {
   }
 }
 
-module.exports = FocusService;
+module.exports = ArticleService;

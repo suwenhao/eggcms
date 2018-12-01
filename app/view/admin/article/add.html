@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>增加文章</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/froala_editor.pkgd.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/froalaEditor/css/froala_style.min.css"/>
+    <link rel="stylesheet" href="/public/admin/lib/zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="/public/admin/lib/diyUpload/css/webuploader.css">
+    <link rel="stylesheet" href="/public/admin/lib/diyUpload/css/diyUpload.css">
+    <style>
+        .layui-tab-item{
+            position: static;
+            min-height:400px;
+        }
+        .layui-form-select dl { max-height:200px; }
+        .layui-form-item .layui-input-inline{
+            width:40%;
+        } 
+    </style>
+</head>
+<body class="main_body">
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>增加文章</legend>
+        <div class="layui-field-box">
+            <form class="layui-form">
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">通用信息</li>
+                        <li>详细描述</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-row">
+                                <div class="layui-col-md9">
+                                    <div style='padding:15px 0;'>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">文章标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input" placeholder="输入文章标题">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">所属分类</label>
+                                            <div class="layui-input-inline">
+                                                <input type="hidden" id="cate_id" name="cate_id" class="layui-input">
+                                                <input type="text" id="cate_name" name="cate_name" class="layui-input" placeholder="选择分类">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">分类树选择</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">文章链接</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="link" class="layui-input" placeholder="输入文章链接">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">Seo关键字</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="keywords" class="layui-input" placeholder="输入Seo关键字">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">Seo描述</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="description" class="layui-input" placeholder="输入Seo描述">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">文章图片</label>
+                                            <div class="layui-input-block">
+                                                <button type="button" class="layui-btn" id="upload">
+                                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" id='imgBox'>
+                                            <label class="layui-form-label">图片预览</label>
+                                            <div class="layui-input-block" id='imgs'>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">文章排序</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="sort" lay-verify="sort" class="layui-input" placeholder="输入文章排序" value="1">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">必须是数字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">文章状态</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" checked name="status" lay-skin="switch" lay-text="显示|隐藏">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div style='padding:15px 0;'>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文章内容</label>
+                                    <div class="layui-input-block">
+                                        <textarea id="content" style="display: none;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="addArticle">立即提交</button>
+                        <a href="<%=adminName%>/article" class="layui-btn layui-btn-primary">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+    <div id="tree" class="ztree" style="display:none;padding:20px;"></div>
+	<script src="/public/admin/layui/layui.js"></script>
+    <script src="/public/admin/js/index.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/jquery-1.10.1.js"></script>
+    <script src="/public/admin/lib/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/froala_editor.pkgd.min.js"></script>
+    <script src="/public/admin/lib/froalaEditor/js/languages/zh_cn.js"></script>
+    <script>
+        var AddArticle = {
+            //分类树数据
+            atricleCates:JSON.parse('<%-atricleCates%>'),
+            //初始化
+            init:function(){
+                this.createText();
+                this.layuiLoad();
+                this.createTree();
+            },
+            //生成树
+            createTree:function(){
+                this.zTreeObj = $.fn.zTree.init($("#tree"), {
+                    data:{
+                        simpleData:{
+                            enable: true,
+                            idKey:'_id',
+                            pIdKey :'pid'
+                        }
+                    }
+                }, this.atricleCates);
+                this.zTreeObj.expandAll(true);
+                this.initCate()
+            },
+            //初始化富文本
+            createText:function(){
+                let toolbar = [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineClass', 'inlineStyle', 'paragraphStyle', 'lineHeight', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontAwesome', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'getPDF',  'html']
+                this.contentText = $('#content').froalaEditor({
+
+                    height: 400,    //给编辑器设置默认的高度
+                    language: 'zh_cn',
+                    imageUploadURL:'<%=adminName%>/goods/uploadImage?_csrf=<%=csrf%>',
+                    //根据不同的分辨率加载不同的配置
+                    toolbarButtons: toolbar,
+                    toolbarButtonsMD: toolbar,
+                    toolbarButtonsSM: toolbar
+                });
+            },
+            //初始化layui布局
+            layuiLoad:function(){
+                var _this = this;
+                layui.use(['form', 'upload', 'element', 'layer'], function() {
+                    var form = layui.form,
+                        layer=layui.layer,
+                        element = layui.element,
+                        upload = layui.upload;
+                    
+                    $('#imgBox').hide();
+                    //表单验证
+                    _this.verify(form);
+                    _this.openCate()
+                    //图片上传
+                    _this.upload(upload,layer);
+                    //提交
+                    _this.submit(form,layer)
+                });
+            },
+            //初始化默认分类
+            initCate:function(){
+                $('#cate_id').val(this.atricleCates[0]._id)
+                $('#cate_name').val(this.atricleCates[0].title)
+            },
+            //分类列表
+            changeCate:function(layer){
+                var _this = this;
+                var node = _this.zTreeObj.getNodeByParam("_id", $('#cate_id').val());
+                _this.zTreeObj.selectNode(node);
+                layer.open({
+                    type: 1,
+                    title: '商品分类',
+                    maxmin: true,
+                    area: ['300px', '400px'],
+                    btn: ['确定', '取消'],
+                    content: $('#tree'),
+                    yes: function(index, layero){
+                        var selectNode=_this.zTreeObj.getSelectedNodes();
+                        console.log(selectNode)
+                        if(selectNode.length>0){
+                            $('#cate_id').val(selectNode[0]._id);
+                            $('#cate_name').val(selectNode[0].title)
+                        }else{
+                            $('#cate_id').val(_this.atricleCates[0]._id)
+                            $('#cate_name').val(_this.atricleCates[0].title)
+                        }
+                        layer.close(index)
+                    }
+                    ,btn2: function(index, layero){
+                        return true
+                    }
+                });
+            },
+            //打开所属分类弹窗
+            openCate:function(){
+                var _this = this;
+                $('#cate_name').focus(function(){
+                    $('#cate_name').blur()
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        _this.changeCate(layer);
+                    })
+                })
+            },
+            //表单验证
+            verify:function(form){
+                form.verify({
+                    title: function(value){
+                        if(value.length<1){
+                            return '商品标题不能为空';
+                        }
+                    },
+                    sort: function(value){
+                        if(value.length<1){
+                            return '排序不能为空';
+                        }else if(isNaN(value)){
+                            return '排序不能为非数字';
+                        }
+                    },
+                });
+            },
+            //图片上传
+            upload:function(upload,layer){
+                //上传图片
+                var uploadInst = upload.render({
+                    elem: '#upload', //绑定元素
+                    url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=800", //上传接口
+                    done: function(res){
+                        //上传完毕回调
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            $('#imgBox').show()
+                            var html = '';
+                            for(var i=0;i<res.data.length;i++){
+                                html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="article_img" value="'+res.data[i]['file']+'">';
+                            }
+                            $('#imgs').html(html)
+                            $('#imgs').find('img').on('click',function(){
+                                var src = $(this).attr('src');
+                                var h = $(this).height();
+                                var w = $(this).width();
+                                var area = '500px';
+                                if(h>w){
+                                    area = '400px';
+                                }else if(h<w){
+                                    area = '700px';
+                                }
+                                layer.open({
+                                    area: area,
+                                    title: '图片预览',
+                                    content: '<img src="'+src+'" width="100%">',
+                                }); 
+                            })
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                    },
+                    error: function(){
+                    //请求异常回调
+                        layer.msg('请求出错');
+                    }
+                });
+            },
+            
+            submit:function(form,layer){
+                //监听提交
+                form.on('submit(addArticle)', function(data) {
+                    data.field._csrf = "<%=csrf%>";
+                    data.field.status = data.field.status?1:0;
+                    data.field.content = $('#content').froalaEditor('html.get');
+                    if(!data.field.article_img){
+                        data.field.article_img = ""
+                    }
+                    console.log(data.field)
+                    $.ajax({
+                        type:'post',
+                        data:data.field,
+                        dataType:'json',
+                        url:'<%=adminName%>/article/doadd',
+                        success:function(res){
+                            console.log(res);
+                            if(res.code===0){
+                                layer.msg(res.msg);
+                                setTimeout(function(){
+                                    window.location.href = "<%=adminName%>/article"
+                                },500)
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        },
+                        error:function(err){
+                            layer.msg('后台出错');
+                        }
+                    })
+                    return false;
+                })
+            },
+        }
+        //初始化
+        AddArticle.init()
+        
+    </script>
+</body>
+</html>

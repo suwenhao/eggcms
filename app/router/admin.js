@@ -90,7 +90,7 @@ module.exports = app => {
    app.router.post(app.adminName()+'/nav/doedit',app.controller.admin.nav.doEdit);
    app.router.get(app.adminName()+'/nav/delete',app.controller.admin.nav.delete);
    app.router.get(app.adminName()+'/nav/change',app.controller.admin.nav.change);
-  //商品分类
+  //文章分类
   app.router.get(app.adminName()+'/articleCate',app.controller.admin.articleCate.index);
   app.router.get(app.adminName()+'/articleCate/add',app.controller.admin.articleCate.add);
   app.router.get(app.adminName()+'/articleCate/edit',app.controller.admin.articleCate.edit);
@@ -98,4 +98,12 @@ module.exports = app => {
   app.router.post(app.adminName()+'/articleCate/doedit',app.controller.admin.articleCate.doEdit);
   app.router.get(app.adminName()+'/articleCate/delete',app.controller.admin.articleCate.delete);
   app.router.get(app.adminName()+'/articleCate/change',app.controller.admin.articleCate.change);
+  //文章管理
+  app.router.get(app.adminName()+'/article',app.controller.admin.article.index);
+  app.router.get(app.adminName()+'/article/add',app.controller.admin.article.add);
+  app.router.post(app.adminName()+'/article/doadd',app.controller.admin.article.doAdd);
+  app.router.get(app.adminName()+'/article/edit',app.controller.admin.article.edit);
+  app.router.post(app.adminName()+'/article/doedit',app.controller.admin.article.doEdit);
+  app.router.get(app.adminName()+'/article/delete',app.controller.admin.article.delete);
+  app.router.get(app.adminName()+'/article/change',app.controller.admin.article.change);
 }

@@ -3,9 +3,9 @@
 const Controller = require('egg').Controller;
 const sd= require('silly-datetime');
 
-class FocusController extends Controller {
+class ArticleController extends Controller {
     async index() {
-        let list = await this.service.focus.list();
+        let list = await this.service.article.list();
         list = list.map(v=>{
             return {
                 ...v,
@@ -14,19 +14,22 @@ class FocusController extends Controller {
             }
         })
         // console.log(JSON.stringify(list))
-        await this.ctx.render('admin/focus/index',{
+        await this.ctx.render('admin/article/index',{
             list:JSON.stringify(list)
         })
     }
     async add() {
-        await this.ctx.render('admin/focus/add')
+        let atricleCates = await this.service.articleCate.getArticleTree();
+        await this.ctx.render('admin/article/add',{
+            atricleCates:JSON.stringify(atricleCates)
+        })
     }
     async edit() {
         let id = this.ctx.request.query.id;
         var res = null;
         try {
             id = this.app.mongoose.Types.ObjectId(id)
-            res = await this.ctx.service.focus.getFocus(id);
+            res = await this.ctx.service.article.getArticle(id);
         } catch (error) {
             this.ctx.body={
                 code:1,
@@ -50,7 +53,7 @@ class FocusController extends Controller {
                 }
             })
             // console.log(list)
-            await this.ctx.render('admin/focus/edit',{
+            await this.ctx.render('admin/article/edit',{
                 list:list[0],
                 id
             })
@@ -59,12 +62,12 @@ class FocusController extends Controller {
     }
     async doAdd() {
         let addResult = this.ctx.request.body;
-        let res = await this.service.focus.add(addResult);
+        let res = await this.service.article.add(addResult);
         this.ctx.body = res;
     }
     async doEdit() {
         let editResult = this.ctx.request.body;
-        let res = await this.service.focus.edit(editResult);
+        let res = await this.service.article.edit(editResult);
         this.ctx.body = res;
     }
     async delete() {
@@ -77,4 +80,4 @@ class FocusController extends Controller {
     }
 }
 
-module.exports = FocusController;
+module.exports = ArticleController;

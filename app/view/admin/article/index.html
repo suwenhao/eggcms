@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>文章列表</title>
+	<!-- title -->
+	<% include ../public/page_title.html%>
+	<style>
+		.layui-table-cell{
+			height:auto;
+		}
+	</style>
+</head>
+<body class="main_body">
+	<blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+			<div class="layui-input-inline">
+				<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
+			</div>
+			<a class="layui-btn search_btn">查询</a>
+		</div>
+		<div class="layui-inline">
+			<a href="<%=adminName%>/article/add" class="layui-btn layui-btn-normal newsAdd_btn">增加文章</a>
+		</div>
+	</blockquote>
+	<div style="padding:0 10px ;">
+		<div class="layui-form news_list">
+			<table id="table"></table>
+		</div>
+	</div>
+	<script type="text/html" id="btnTpl">
+		<a href="<%=adminName%>/article/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
+		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
+	</script>
+	<script type="text/html" id="switchTpl">
+		<input lay-filter="switchTest" type="checkbox" name='status' data-id="{{d._id}}" {{d.status==1?'checked':''}} lay-text="显示|隐藏" name="switch" lay-skin="switch">
+	</script>
+	<script type="text/html" id="sortTpl">
+		<input style='width:50px;' type="text" value="{{d.sort}}"  data-id="{{d._id}}" placeholder="请输入" autocomplete="on" class="layui-input change-btn">
+	</script>
+	<script type="text/html" id="timeTpl">
+		<div>{{d.add_time}}</div>
+	</script>
+	<script type="text/html" id="imgTpl">
+		<div><img src="{{d.img.src}}" alt="" class="img"></div>
+	</script>
+	<script type="text/html" id="typeTpl">
+		{{d.type==1?"<button class='layui-btn layui-btn-sm'>网站</button>":d.type==2?"<button class='layui-btn layui-btn-normal layui-btn-sm'>APP</button>":"<button class='layui-btn layui-btn-warm layui-btn-sm'>小程序</button>"}}
+	</script>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+	<script type="text/javascript" src="/public/admin/js/index.js"></script>
+	<script type="text/javascript" src="/public/admin/js/util.js"></script>
+	<script>
+		layui.use(['form','layer','jquery','table'],function(){
+			var form = layui.form,
+				layer =layui.layer,
+				table = layui.table,
+				$ = layui.jquery;
+			var data =JSON.parse('<%-list%>');
+			//第一个实例
+			table.render({
+				elem: '#table',
+				height: 'full-100',
+				data:data, //数据接口
+				page: true, //开启分页
+				limit:10,
+				limits:[10,20,50,100],
+				cols: [[ //表头
+					{field: 'type',align:'center', title: '分类',templet:'#typeTpl',width:90},
+					{field: 'title', title: '文章名称'},
+					{field: 'link', title: '文章链接'},
+					{field: 'img', align:'center', title: '文章封面',templet:'#imgTpl'},
+					{field: 'sort', align:'center', width:80, title: '排序', sort: true,templet:'#sortTpl'},
+					{field: 'status', align:'center', title: '状态', width: 95, templet:'#switchTpl'},
+					{field: 'add_time', title: '时间',templet:'#timeTpl'},
+					{field: '', title: '操作',align:'center', width: 150,fixed: 'right',templet:'#btnTpl'},
+				]],
+				done:function(){
+					//删除
+					$('.delete-btn').on('click',function(){
+						var id = $(this).attr('data-id');
+						// alert(id);
+						layer.confirm('是否删除该文章？',{
+							title:'警告',
+							content:'是否删除该文章？',
+							btn: ['确认', '取消'], //可以无限个按钮
+						}, function(index, layero){
+							var url = '<%=adminName%>/article/delete';
+							var params = {
+								model:'Article',
+								id:id
+							}
+							//删除
+							reqAjax.delete('get', url, params, "<%=adminName%>/article");
+							
+						}, function(index){console.log('取消删除')});
+					})
+					//状态改变
+					form.on('switch(switchTest)', function(data){
+						var id = $(this).attr('data-id');
+						var val = this.checked;
+						if(val){val=1}else{val=0}
+						var url = '<%=adminName%>/article/change';
+						var params = {
+							model:'Article',
+							attr:'status',
+							value:val,
+							id:id
+						}
+						//改变
+						reqAjax.change('get', url, params)
+					
+					});
+					//改变排序
+					$('.change-btn').on('blur',function(){
+						var id = $(this).attr('data-id');
+						var val = $(this).val();
+						if(val==''){
+							layer.msg('请输入排序');
+							$(this).focus();
+							return;
+						}else if(isNaN(val)){
+							layer.msg('不是数字');
+							$(this).focus();
+							return;
+						}
+						var url = '<%=adminName%>/article/change';
+						var params = {
+							model:'Article',
+							attr:'sort',
+							value:val,
+							id:id
+						}
+						//改变
+						reqAjax.change('get', url, params)
+						
+					});
+					$('.img').on('click',function(){
+						var src = $(this).attr('src');
+						var h = $(this).height();
+						var w = $(this).width();
+						var area = '500px';
+						if(h>w){
+							area = '400px';
+						}else if(h<w){
+							area = '700px';
+						}
+						layer.open({
+							area: area,
+							title: '图片预览',
+							content: '<img src="'+src+'" width="100%">',
+						}); 
+					})
+				}
+			});
+			
+		})
+
+	</script>
+</body>
+</html>
