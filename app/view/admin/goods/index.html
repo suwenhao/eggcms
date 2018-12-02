@@ -12,13 +12,46 @@
 		.layui-table-cell{
 			height:auto;
 		}
+		.inline-form{
+			padding:9px 0;
+			width:auto;
+			padding-right:10px;
+		}
 	</style>
 </head>
 <body class="main_body">
 	<blockquote class="layui-elem-quote news_search">
-		<div class="layui-inline">
-			<a href="<%=adminName%>/goods/add" class="layui-btn layui-btn-normal newsAdd_btn">添加商品</a>
-		</div>
+		<form class="layui-form">
+			<div class="layui-inline">
+				<label class="layui-form-label inline-form">商品名称</label>
+				<div class="layui-input-inline">
+					<input type="text" name="filter_title" placeholder="请输入商品名称" class="layui-input search_input">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label inline-form">商品上架</label>
+				<div class="layui-input-inline">
+					<select name="filter_shelf">
+						<option value=""></option>
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label inline-form">商品价格</label>
+				<div class="layui-input-inline">
+					<div id="slide" style="width:200px;padding:25px 10px 5px 10px;"></div>
+					<input id="filter_price" type="hidden" value="0,40000" name="filter_price" placeholder="请输入商品价格" class="layui-input search_input">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<a class="layui-btn search_btn" lay-submit data-type="reload" lay-filter="query">查询</a>
+			</div>
+			<div class="layui-inline">
+				<a href="<%=adminName%>/goods/add" class="layui-btn layui-btn-normal newsAdd_btn">添加商品</a>
+			</div>
+		</form>
 	</blockquote>
 	<div style="padding:0 10px ;">
 		<div class="layui-form news_list">
@@ -27,7 +60,8 @@
 	</div>
 	<script type="text/html" id="btnTpl">
 		<a href="<%=adminName%>/goods/edit?id={{d._id}}"  class="layui-btn layui-btn-sm" data-id='{{d._id}}'>编辑</a>
-		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>删除</button>
+		<button class="layui-btn layui-btn-danger layui-btn-sm delete-btn" data-id='{{d._id}}'>软删除</button>
+		<button class="layui-btn layui-btn-danger layui-btn-sm remove-btn" data-id='{{d._id}}'>硬删除</button>
 	</script>
 	<script type="text/html" id="shelfTpl">
 		<input lay-filter="is_shelf" type="checkbox" name='is_shelf' data-id="{{d._id}}" {{d.is_shelf==1?'checked':''}} lay-text="是|否" lay-skin="switch">
@@ -59,14 +93,38 @@
 	<script type="text/javascript" src="/public/admin/js/index.js"></script>
 	<script type="text/javascript" src="/public/admin/js/util.js"></script>
 	<script>
-		layui.use(['form','layer','jquery','table'],function(){
-			var form = layui.form,
-				layer =layui.layer,
-				table = layui.table,
-				$ = layui.jquery;
-
-			var renderTable = function () {
-				table.render({
+		var GoodsList = {
+			init:function(){
+				this.layuiLoad();
+			},
+			layuiLoad:function(){
+				var self = this;
+				layui.use(['form','layer','jquery','table','slider'],function(){
+					var form = layui.form,
+						layer =layui.layer,
+						table = layui.table,
+						slider = layui.slider,
+						$ = layui.jquery;
+					slider.render({
+						elem: '#slide',  //绑定元素
+						range: true,
+						min:0,
+						max:40000,
+						value: [0, 40000],
+						tips:true,
+						change: function(value){
+							$('#filter_price').val(value)
+						}
+					});
+					//生成表格
+					self.renderTable(table,form,layer,$);
+					self.submitQuery(form,table,$)
+				})
+			},
+			renderTable:function(table,form,layer,$){
+				var self = this;
+				self.tableList=table.render({
+					id:'table',
 					elem: '#table',
 					height: 'full-100',
 					method:'post',
@@ -86,158 +144,24 @@
 						{field: 'status', align:'center', width: 110, title: '状态',templet:'#typeTpl'},
 						{field: 'sort', align:'center',width: 80, title: '排序',templet:'#sortTpl'},
 						{field: 'goods_number', align:'center',width: 100, title: '库存',templet:'#numberTpl'},
-						{field: '', title: '操作',align:'center', width: 150,templet:'#btnTpl'},
+						{field: '', title: '操作',align:'center', width: 220,templet:'#btnTpl'},
 					]],
 					limit:10,
 					limits:[10,20,50,100],
-					page: true, //开启分页
+					page: {
+						groups: 3 //只显示 1 个连续页码
+						,first: '首页' //不显示首页
+						,last: '尾页' //不显示尾页
+						,theme: '#7185a2'
+					}, //开启分页
 					done: function () {
-						//删除操作
-						$('.delete-btn').on('click',function(){
-							var id = $(this).attr('data-id');
-							// alert(id);
-							layer.confirm('是否删除该商品？',{
-								title:'警告',
-								content:'是否删除该商品？',
-								btn: ['确认', '取消'], //可以无限个按钮
-							}, function(index, layero){
-								var url = '<%=adminName%>/goods/change';
-								// var params = {
-								// 	model:'Goods',
-								// 	id:id
-								// }
-								var params = {
-									model:'Goods',
-									attr:'is_delete',
-									value:1,
-									id:id
-								}
-								//删除
-								reqAjax.delete('get', url, params, "<%=adminName%>/goods",false,'删除成功');
-
-							}, function(index){console.log('取消删除')});
-						})
-						//修改排序
-						$('.change-btn').on('blur',function(){
-							var id = $(this).attr('data-id');
-							var val = $(this).val();
-							if(val==''){
-								layer.msg('请输入排序');
-								$(this).focus();
-								return;
-							}else if(isNaN(val)){
-								layer.msg('不是数字');
-								$(this).focus();
-								return;
-							}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'sort',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						})
-						//修改库存
-						$('.goods-number-btn').on('blur',function(){
-							var id = $(this).attr('data-id');
-							var val = $(this).val();
-							if(val==''){
-								layer.msg('请输入库存');
-								$(this).focus();
-								return;
-							}else if(isNaN(val)){
-								layer.msg('不是数字');
-								$(this).focus();
-								return;
-							}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'goods_number',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						})
-						//状态改变
-						form.on('switch(status)', function(data){
-							var id = $(this).attr('data-id');
-							var val = this.checked;
-							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'status',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						});
-						//上架改变
-						form.on('switch(is_shelf)', function(data){
-							var id = $(this).attr('data-id');
-							var val = this.checked;
-							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'is_shelf',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						});
-						//精品改变
-						form.on('switch(is_best)', function(data){
-							var id = $(this).attr('data-id');
-							var val = this.checked;
-							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'is_best',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						});
-						//新品改变
-						form.on('switch(is_new)', function(data){
-							var id = $(this).attr('data-id');
-							var val = this.checked;
-							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'is_new',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						});
-						//热销改变
-						form.on('switch(is_hot)', function(data){
-							var id = $(this).attr('data-id');
-							var val = this.checked;
-							if(val){val=1}else{val=0}
-							var url = '<%=adminName%>/goods/change';
-							var params = {
-								model:'Goods',
-								attr:'is_hot',
-								value:val,
-								id:id
-							}
-							//改变
-							reqAjax.change('get', url, params)
-						});
+						self.statusChange(form,$)
+						self.removeEvent(layer,$)
+						self.sortChange(layer,$)
+						self.goodsNumberChange(layer,$)
+						self.shelfChange(form,$)
+						self.recommendChange(form,$)
+						//图片点击预览
 						$('.img').on('click',function(){
 							var src = $(this).attr('src');
 							layer.open({
@@ -248,10 +172,211 @@
 						})
 					}
 				});
-			};
-			renderTable()
-		})
+			},
+			//推荐改变
+			recommendChange:function(form,$){
+				//精品改变
+				form.on('switch(is_best)', function(data){
+					var id = $(this).attr('data-id');
+					var val = this.checked;
+					if(val){val=1}else{val=0}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'is_best',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				});
+				//新品改变
+				form.on('switch(is_new)', function(data){
+					var id = $(this).attr('data-id');
+					var val = this.checked;
+					if(val){val=1}else{val=0}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'is_new',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				});
+				//热销改变
+				form.on('switch(is_hot)', function(data){
+					var id = $(this).attr('data-id');
+					var val = this.checked;
+					if(val){val=1}else{val=0}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'is_hot',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				});
+			},
+			//上架改变
+			shelfChange:function(form,$){
+				//上架改变
+				form.on('switch(is_shelf)', function(data){
+					var id = $(this).attr('data-id');
+					var val = this.checked;
+					if(val){val=1}else{val=0}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'is_shelf',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				});
+			},
+			//库存改变
+			goodsNumberChange:function(layer,$){
+				//修改库存
+				$('.goods-number-btn').on('blur',function(){
+					var id = $(this).attr('data-id');
+					var val = $(this).val();
+					if(val==''){
+						layer.msg('请输入库存');
+						$(this).focus();
+						return;
+					}else if(isNaN(val)){
+						layer.msg('不是数字');
+						$(this).focus();
+						return;
+					}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'goods_number',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				})
+			},
+			//排序改变
+			sortChange:function(layer,$){
+				//修改排序
+				$('.change-btn').on('blur',function(){
+					var id = $(this).attr('data-id');
+					var val = $(this).val();
+					if(val==''){
+						layer.msg('请输入排序');
+						$(this).focus();
+						return;
+					}else if(isNaN(val)){
+						layer.msg('不是数字');
+						$(this).focus();
+						return;
+					}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'sort',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				})
+			},
+			//状态改变
+			statusChange:function(form,$){
+				//状态改变
+				form.on('switch(status)', function(data){
+					var id = $(this).attr('data-id');
+					var val = this.checked;
+					if(val){val=1}else{val=0}
+					var url = '<%=adminName%>/goods/change';
+					var params = {
+						model:'Goods',
+						attr:'status',
+						value:val,
+						id:id
+					}
+					//改变
+					reqAjax.change('get', url, params)
+				});
+			},
+			//删除操作
+			removeEvent:function(layer,$){
+				//删除操作
+				$('.delete-btn').on('click',function(){
+					var id = $(this).attr('data-id');
+					// alert(id);
+					layer.confirm('是否软删除该商品？',{
+						title:'警告',
+						content:'是否软删除该商品？',
+						btn: ['确认', '取消'], //可以无限个按钮
+					}, function(index, layero){
+						var url = '<%=adminName%>/goods/delete';
+						// var params = {
+						// 	model:'Goods',
+						// 	id:id
+						// }
+						var params = {
+							model:'Goods',
+							attr:'is_delete',
+							value:1,
+							id:id
+						}
+						//删除
+						reqAjax.delete('get', url, params, "<%=adminName%>/goods",false,'删除成功');
 
+					}, function(index){console.log('取消删除')});
+				})
+				//删除操作
+				$('.remove-btn').on('click',function(){
+					var id = $(this).attr('data-id');
+					// alert(id);
+					layer.confirm('是否硬删除该商品？',{
+						title:'警告',
+						content:'是否硬删除该商品？',
+						btn: ['确认', '取消'], //可以无限个按钮
+					}, function(index, layero){
+						var url = '<%=adminName%>/goods/remove';
+						var params = {
+							model:'Goods',
+							id:id
+						}
+						//删除
+						reqAjax.delete('get', url, params, "<%=adminName%>/goods",false,'删除成功');
+
+					}, function(index){console.log('取消删除')});
+				})
+			},
+			//提交查询
+			submitQuery:function(form,table,$){
+				var self = this;
+				form.on('submit(query)', function(data) {
+					data.field.filter_price = data.field.filter_price.split(',')
+					console.log(data.field)
+					table.reload('table', {
+						page: {
+							curr: 1
+						},
+						where: {
+							title: data.field.filter_title,
+							is_shelf: data.field.filter_shelf,
+							price: data.field.filter_price,
+						}
+					});
+					return false;
+				})
+			}
+		}
+		GoodsList.init()
 	</script>
 </body>
 </html>

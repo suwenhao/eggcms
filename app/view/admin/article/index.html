@@ -13,15 +13,17 @@
 </head>
 <body class="main_body">
 	<blockquote class="layui-elem-quote news_search">
-		<div class="layui-inline">
-			<div class="layui-input-inline">
-				<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
+		<form class="layui-form">
+			<div class="layui-inline">
+				<div class="layui-input-inline">
+					<input type="text" name="filter_title" placeholder="请输入关键字" class="layui-input search_input">
+				</div>
+				<a class="layui-btn search_btn" lay-submit data-type="reload" lay-filter="query">查询</a>
 			</div>
-			<a class="layui-btn search_btn">查询</a>
-		</div>
-		<div class="layui-inline">
-			<a href="<%=adminName%>/article/add" class="layui-btn layui-btn-normal newsAdd_btn">增加文章</a>
-		</div>
+			<div class="layui-inline">
+				<a href="<%=adminName%>/article/add" class="layui-btn layui-btn-normal newsAdd_btn">增加文章</a>
+			</div>
+		</form>
 	</blockquote>
 	<div style="padding:0 10px ;">
 		<div class="layui-form news_list">
@@ -56,6 +58,7 @@
 			//第一个实例
 			table.render({
 				elem: '#table',
+				id:'table',
 				height: 'full-100',
 				url:'<%=adminName%>/article?_csrf=<%=csrf%>', //数据接口
 				method:'post',
@@ -67,9 +70,9 @@
 					{field: 'cate_id', align:'center', title: '分类',width:100,templet:'#cateTpl'},
 					{field: 'link', title: '文章链接'},
 					{field: 'article_img', align:'center', title: '文章封面',templet:'#imgTpl'},
-					{field: 'sort', align:'center', width:80, title: '排序', sort: true,templet:'#sortTpl'},
+					{field: 'sort', align:'center', width:80, title: '排序', sort: true, templet:'#sortTpl'},
 					{field: 'status', align:'center', title: '状态', width: 95, templet:'#switchTpl'},
-					{field: 'time', title: '时间',},
+					{field: 'time', title: '时间',sort: true,},
 					{field: '', title: '操作',align:'center', width: 150,fixed: 'right',templet:'#btnTpl'},
 				]],
 				done:function(){
@@ -150,7 +153,17 @@
 					})
 				}
 			});
-			
+			form.on('submit(query)', function(data) {
+				table.reload('table', {
+					page: {
+						curr: 1
+					},
+					where: {
+						title: data.field.filter_title
+					}
+				});
+				return false;
+			})
 		})
 
 	</script>

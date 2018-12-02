@@ -267,6 +267,10 @@ class GoodsController extends Controller {
     }
   }
   async delete() {
+    let {id,model,attr,value} = this.ctx.request.query;
+    await this.service.tools.change(model,id,attr,value);
+  }
+  async trueDelete(){
     let {id,model} = this.ctx.request.query;
     await this.ctx.model.GoodsAttr.deleteMany({'goods_id':id});
     await this.ctx.model.GoodsImage.deleteMany({'goods_id':id});

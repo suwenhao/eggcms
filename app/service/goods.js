@@ -7,13 +7,29 @@ class GoodsService extends Service {
   async list(query) {
     let page=(query.page-1)*query.limit;
     let limit = query.limit*1;
-    let count = await this.ctx.model.Goods.countDocuments();
+    
     // console.log('--count--')
     // console.log(count)
+    var match = {
+      is_delete:0
+    }
+    if(query.title){
+      match.title = {$regex:query.title};
+    }
+    if(query.is_shelf=="0"||query.is_shelf=="1"){
+      match.is_shelf = parseInt(query.is_shelf);
+    }
+    if(query.price){
+      match.shop_price = {"$gte" : parseInt(query.price[0]), "$lte" : parseInt(query.price[1])};
+    }
+    //长度
+    let count = await this.ctx.model.Goods.countDocuments(match);
+    console.log(match)
+    //列表
     let list = await this.ctx.model.Goods.aggregate([
       {$skip:page},
       {$limit:limit},
-      {$match:{'is_delete':0}}
+      {$match:match}
     ]);
     // console.log(list)
     list=list.sort(util.compare);

@@ -80,6 +80,7 @@ module.exports = app => {
   app.router.post(app.adminName()+'/goods/doadd',app.controller.admin.goods.doAdd);
   app.router.post(app.adminName()+'/goods/doedit',app.controller.admin.goods.doEdit);
   app.router.get(app.adminName()+'/goods/delete',app.controller.admin.goods.delete);
+  app.router.get(app.adminName()+'/goods/remove',app.controller.admin.goods.trueDelete);
   app.router.get(app.adminName()+'/goods/change',app.controller.admin.goods.change);
    //导航
    app.router.get(app.adminName()+'/nav',app.controller.admin.nav.index);

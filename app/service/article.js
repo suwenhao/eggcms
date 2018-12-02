@@ -36,7 +36,14 @@ class ArticleService extends Service {
   async getlist(query) {
     let page=(query.page-1)*query.limit;
     let limit = query.limit*1;
-    let count = await this.ctx.model.Article.countDocuments();
+
+    var match = {}
+
+    if(query.title){
+      match.title = {$regex:query.title};
+    }
+
+    let count = await this.ctx.model.Article.countDocuments(match);
     // console.log('--count--')
     // console.log(count)
     let list = await this.ctx.model.Article.aggregate([
@@ -49,7 +56,8 @@ class ArticleService extends Service {
         }
       },
       {$skip:page},
-      {$limit:limit}
+      {$limit:limit},
+      {$match:match}
     ]);
     // console.log(list)
     list=list.sort(util.compare);
