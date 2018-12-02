@@ -49,10 +49,6 @@ class NavController extends Controller {
         let {id,model,attr,value} = this.ctx.request.query;
         await this.service.tools.change(model,id,attr,value);
     }
-    async change() {
-        let {id,model,attr,value} = this.ctx.request.query;
-        await this.service.tools.change(model,id,attr,value);
-    }
 }
 
 module.exports = NavController;

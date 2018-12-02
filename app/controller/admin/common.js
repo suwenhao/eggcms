@@ -123,6 +123,43 @@ class IndexController extends BaseController {
             data:files
         }
     }
+    async uploadImage(){
+        let parts = this.ctx.multipart({autoFields:true});
+        let stream;
+        let files=[];
+        while((stream = await parts()) != null){
+            if(!stream.filename){
+                break;
+            }
+            let fieldname = stream.fieldname;
+            let dir = await this.service.tools.getUploadFile(stream.filename);
+            let target = dir.uploadDir;
+            let writeStream = fs.createWriteStream(target);
+            try {
+                await pump(stream,writeStream)
+            } catch (error) {
+                this.ctx.body = {
+                    code:1,
+                    msg:'上传失败',
+                    link:''
+                }
+                return;
+            }
+            
+            let res = await this.ctx.model.Image.create({
+              src:dir.saveDir
+            })
+            files.push({
+              [fieldname]:dir.saveDir,
+              _id:res._id
+            })
+        }
+        this.ctx.body = {
+          code:0,
+          msg:'上传成功',
+          link:files[0].file
+        }
+    }
     async index(){
         await this.ctx.render('admin/index')
     }

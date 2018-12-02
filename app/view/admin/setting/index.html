@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>商店设置</title>
+    <!-- title -->
+    <% include ../public/page_title.html%>
+</head>
+<body class="main_body">
+    <fieldset class="layui-elem-field" style="margin:10px;">
+        <legend>商店设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-row">
+                <div class="layui-col-md9">
+                    <form class="layui-form" style='padding:15px 0;'>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.site_title%>" name="site_title" placeholder="请输入网站标题" lay-verify="site_title" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站logo</label>
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn" id="upload">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id='imgBox'>
+                            <label class="layui-form-label">图片预览</label>
+                            <div class="layui-input-block" id='imgs'>
+                                <% if(data.site_logo){%>
+                                <img src="<%=data.site_logo%>" width="200" alt=""/>
+                                <input type="hidden" name="site_logo" value="<%=data.site_logo%>">
+                                <%}%>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站关键词</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.site_keywords%>"  name="site_keywords" placeholder="请输入关键词" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站描述</label>
+                            <div class="layui-input-block">
+                                <textarea  name="site_description" placeholder="请输入网站描述" class="layui-textarea"><%=data.site_description%></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品图片</label>
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn" id="upload1">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id='imgBox1'>
+                            <label class="layui-form-label">图片预览</label>
+                            <div class="layui-input-block" id='imgs1'>
+                                <% if(data.no_picture){%>
+                                <img src="<%=data.no_picture%>" width="200" alt=""/>
+                                <input type="hidden" name="no_picture" value="<%=data.no_picture%>">
+                                <%}%>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备案信息</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.site_icp%>"  name="site_icp" placeholder="请输入备案信息" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.site_tel%>"  name="site_tel" placeholder="请输入网站电话" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">搜索关键词</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.search_keywords%>"  name="search_keywords" placeholder="请输入搜索关键词" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">统计代码</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="<%=data.tongji_code%>"  name="tongji_code" placeholder="请输入统计代码" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="edit">保存修改</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+	<script type="text/javascript" src="/public/admin/layui/layui.js"></script>
+    <script type="text/javascript" src="/public/admin/js/index.js"></script>
+    <script>
+         layui.use(['form','jquery','upload'], function() {
+            var form = layui.form,
+            upload = layui.upload,
+                $ = layui.jquery;
+            //自定义验证规则
+            form.verify({
+                site_title: function(value) {
+                    if(value.length == 0) {
+                        return '请输入网站标题';
+                    }else if(value.length<3){
+                        return '网站标题不能小于3个字符';
+                    }
+                }
+            });
+            var flag = '<%=data.site_logo%>';
+            if(flag){
+                $('#imgBox').show();
+            }else{
+                $('#imgBox').hide();
+            }
+            var flag1 = '<%=data.no_picture%>';
+            if(flag1){
+                $('#imgBox1').show();
+            }else{
+                $('#imgBox1').hide();
+            }
+            //上传图片
+            upload.render({
+                elem: '#upload', //绑定元素
+                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=200", //上传接口
+                done: function(res){
+                    //上传完毕回调
+                    if(res.code===0){
+                        layer.msg(res.msg);
+                        $('#imgBox').show()
+                        var html = '';
+                        for(var i=0;i<res.data.length;i++){
+                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="site_logo" value="'+res.data[i]['file']+'">';
+                        }
+                        $('#imgs').html(html)
+                        $('#imgs').find('img').on('click',function(){
+                            var src = $(this).attr('src');
+                            var h = $(this).height();
+                            var w = $(this).width();
+                            var area = '500px';
+                            if(h>w){
+                                area = '400px';
+                            }else if(h<w){
+                                area = '700px';
+                            }
+                            layer.open({
+                                area: area,
+                                title: '图片预览',
+                                content: '<img src="'+src+'" width="100%">',
+                            }); 
+                        })
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                },
+                error: function(){
+                //请求异常回调
+                    layer.msg('请求出错');
+                }
+            });
+            upload.render({
+                elem: '#upload1', //绑定元素
+                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=200", //上传接口
+                done: function(res){
+                    //上传完毕回调
+                    if(res.code===0){
+                        layer.msg(res.msg);
+                        $('#imgBox1').show()
+                        var html = '';
+                        for(var i=0;i<res.data.length;i++){
+                            html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="no_picture" value="'+res.data[i]['file']+'">';
+                        }
+                        $('#imgs1').html(html)
+                        $('#imgs1').find('img').on('click',function(){
+                            var src = $(this).attr('src');
+                            var h = $(this).height();
+                            var w = $(this).width();
+                            var area = '500px';
+                            if(h>w){
+                                area = '400px';
+                            }else if(h<w){
+                                area = '700px';
+                            }
+                            layer.open({
+                                area: area,
+                                title: '图片预览',
+                                content: '<img src="'+src+'" width="100%">',
+                            }); 
+                        })
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                },
+                error: function(){
+                //请求异常回调
+                    layer.msg('请求出错');
+                }
+            });
+            //监听提交
+            form.on('submit(edit)', function(data) {
+                data.field._csrf = "<%=csrf%>";
+                data.field.id = "<%=data._id%>";
+                if(!data.field.site_logo){
+                    data.field.site_logo = ""
+                }
+                if(!data.field.no_picture){
+                    data.field.no_picture = ""
+                }
+                console.log(data.field)
+                $.ajax({
+                    type:'post',
+                    data:data.field,
+                    dataType:'json',
+                    url:'<%=adminName%>/setting/doedit',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code===0){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                                window.location.href = "<%=adminName%>/setting"
+                            },500)
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        
+                    },
+                    error:function(err){
+                        layer.msg('后台出错');
+                    }
+                })
+                return false;
+            })
+        })
+    </script>
+</body>
+</html>

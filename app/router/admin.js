@@ -7,6 +7,7 @@ module.exports = app => {
   app.router.get(app.adminName()+'/noauth',app.controller.admin.common.noauth);
   app.router.post(app.adminName()+'/upload',app.controller.admin.common.upload);
   app.router.post(app.adminName()+'/delete',app.controller.admin.common.delete);
+  app.router.post(app.adminName()+'/uploadImage',app.controller.admin.common.uploadImage);
   app.router.get(app.adminName(),app.controller.admin.common.index);
   /*管理员管理*/
   app.router.get(app.adminName()+'/manager',app.controller.admin.manager.index);
@@ -74,7 +75,6 @@ module.exports = app => {
   app.router.get(app.adminName()+'/goods',app.controller.admin.goods.index);
   app.router.post(app.adminName()+'/goods',app.controller.admin.goods.list);
   app.router.get(app.adminName()+'/goods/goodsTypeAttribute',app.controller.admin.goods.goodsTypeAttribute);
-  app.router.post(app.adminName()+'/goods/uploadImage',app.controller.admin.goods.uploadImage);
   app.router.get(app.adminName()+'/goods/add',app.controller.admin.goods.add);
   app.router.get(app.adminName()+'/goods/edit',app.controller.admin.goods.edit);
   app.router.post(app.adminName()+'/goods/doadd',app.controller.admin.goods.doAdd);
@@ -107,4 +107,7 @@ module.exports = app => {
   app.router.post(app.adminName()+'/article/doedit',app.controller.admin.article.doEdit);
   app.router.get(app.adminName()+'/article/delete',app.controller.admin.article.delete);
   app.router.get(app.adminName()+'/article/change',app.controller.admin.article.change);
+   //商店设置
+   app.router.get(app.adminName()+'/setting',app.controller.admin.setting.index);
+   app.router.post(app.adminName()+'/setting/doedit',app.controller.admin.setting.doEdit);
 }
