@@ -1,6 +1,6 @@
 # eggcms
 
-egg开发RBAC商城权限管理，还在持续开发中
+egg开发RBAC商城权限管理，还在开发中
 
 <img src="./doc/images/1.png" width="900">
 <img src="./doc/images/2.png" width="900">
