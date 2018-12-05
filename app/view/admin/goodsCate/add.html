@@ -132,7 +132,7 @@
             //上传图片
             var uploadInst = upload.render({
                 elem: '#upload', //绑定元素
-                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true", //上传接口
+                url: "<%=adminName%>/upload?_csrf=<%=csrf%>&jimp=true&size=200", //上传接口
                 done: function(res){
                     //上传完毕回调
                     if(res.code===0){

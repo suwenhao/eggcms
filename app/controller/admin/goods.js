@@ -170,7 +170,7 @@ class GoodsController extends Controller {
     let newGoods = this.ctx.request.body;
     // console.log(newGoods)
     //商品属性id
-    if(newGoods.goods_type_id!='0'){
+    if(newGoods.goods_type_id!="0"){
       newGoods.goods_type_id = this.app.mongoose.Types.ObjectId(newGoods.goods_type_id)
     }else{
       newGoods.goods_type_id = "0"
@@ -180,15 +180,31 @@ class GoodsController extends Controller {
     if(goodsResult){
       //增加商品图库
       let goods_image_list = newGoods.goods_image_list;
-      let goods_color_id = newGoods.goods_color_id;
+      let goods_color_id = newGoods.goods_color_id||"";
       await this.ctx.model.GoodsImage.deleteMany({'goods_id':newGoods.id});
       //图片存在
       if(goods_image_list){
         for(let i=0;i<goods_image_list.length;i++){
-          let newGoodsImage = {
-            goods_id: newGoods.id,
-            img_url: goods_image_list[i],
-            color_id: goods_color_id[i]
+          if(goods_color_id){
+            if(goods_color_id[i]){
+              var newGoodsImage = {
+                goods_id: newGoods.id,
+                img_url: goods_image_list[i],
+                color_id: goods_color_id[i]
+              }
+            }else{
+              var newGoodsImage = {
+                goods_id: newGoods.id,
+                img_url: goods_image_list[i],
+                color_id: ""
+              }
+            }
+          }else{
+            var newGoodsImage = {
+              goods_id: newGoods.id,
+              img_url: goods_image_list[i],
+              color_id: ""
+            }
           }
           await this.service.goodsImage.add(newGoodsImage)
         }

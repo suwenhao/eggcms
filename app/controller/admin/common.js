@@ -82,8 +82,13 @@ class IndexController extends BaseController {
             }
             
             if(flag){
-                let imageSize = size?parseInt(size):200;
-                let SizeText = `_${size}x${size}`;
+                var imageSize=200;
+                if(size){
+                    imageSize=parseInt(size);
+                }else{
+                    imageSize=200;
+                }
+                let SizeText = `_${imageSize}x${imageSize}`;
                 let pathsrc = dir.saveDir + SizeText + path.extname(dir.saveDir);
                 Jimp.read(target, (err, lenna) => {
                     if (err) throw err;
