@@ -414,23 +414,25 @@
                             for(var i=0;i<res.data.length;i++){
                                 html+='<img src="'+res.data[i]['file']+'" width="200" alt=""/><input type="hidden" name="goods_img" value="'+res.data[i]['file']+'">';
                             }
-                            $('#imgs').html(html)
-                            $('#imgs').find('img').on('click',function(){
-                                var src = $(this).attr('src');
-                                var h = $(this).height();
-                                var w = $(this).width();
-                                var area = '500px';
-                                if(h>w){
-                                    area = '400px';
-                                }else if(h<w){
-                                    area = '700px';
-                                }
-                                layer.open({
-                                    area: area,
-                                    title: '图片预览',
-                                    content: '<img src="'+src+'" width="100%">',
-                                }); 
-                            })
+                            setTimeout(function(){
+                                $('#imgs').html(html)
+                                $('#imgs').find('img').on('click',function(){
+                                    var src = $(this).attr('src');
+                                    var h = $(this).height();
+                                    var w = $(this).width();
+                                    var area = '500px';
+                                    if(h>w){
+                                        area = '400px';
+                                    }else if(h<w){
+                                        area = '700px';
+                                    }
+                                    layer.open({
+                                        area: area,
+                                        title: '图片预览',
+                                        content: '<img src="'+src+'" width="100%">',
+                                    }); 
+                                })
+                            },1000)
                         }else{
                             layer.msg(res.msg);
                         }
