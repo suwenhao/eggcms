@@ -33,6 +33,10 @@ class NavService extends Service {
         return null
     }
   }
+  async getPosiNav(num){
+    let res = await this.ctx.model.Nav.find({position:num})
+    return res;
+  }
 }
 
 module.exports = NavService;

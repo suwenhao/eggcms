@@ -8,6 +8,10 @@ class GoodsCateService extends Service {
     let res = await this.ctx.model.GoodsCate.find({"pid":"0"})
     return res;
   }
+  async getGoodsCate(pid) {
+    let res = await this.ctx.model.GoodsCate.find({"pid":pid})
+    return res;
+  }
   async getGoodsTree(){
     try {
         let res = await this.ctx.model.GoodsCate.aggregate([
