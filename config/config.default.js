@@ -38,7 +38,7 @@ module.exports = appInfo => {
   config.mongoose = {
     client: {
       // url: 'mongodb://localhost:27017/eggcms', //无数据库名和密码
-      url: 'mongodb://eggadmin:123456@localhost:27017/eggcms', //有数据库名和密码
+      url: 'mongodb://localhost:27017/eggcms', //有数据库名和密码
       options: {useNewUrlParser:true,useCreateIndex:true,}, //mongodb4.0需要的设置
     },
   };
