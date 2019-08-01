@@ -1,5 +1,5 @@
 # eggcms
-
+在线预览地址 ：http://www.suwh.club:7001
 egg开发RBAC商城权限管理，还在开发中。
 
 <img src="./doc/images/0.png" width="900">
