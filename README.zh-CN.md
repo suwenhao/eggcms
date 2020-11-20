@@ -3,36 +3,36 @@
 
 egg开发RBAC商城权限管理，还在开发中。
 
-<img src="./doc/images/0.png" width="900">
-<img src="./doc/images/1.png" width="900">
-<img src="./doc/images/2.png" width="900">
-<img src="./doc/images/3.png" width="900">
-<img src="./doc/images/4.png" width="900">
-<img src="./doc/images/5.png" width="900">
-<img src="./doc/images/6.png" width="900">
-<img src="./doc/images/7.png" width="900">
-<img src="./doc/images/8.png" width="900">
-<img src="./doc/images/9.png" width="900">
-<img src="./doc/images/10.png" width="900">
-<img src="./doc/images/11.png" width="900">
-<img src="./doc/images/12.png" width="900">
-<img src="./doc/images/13.png" width="900">
-<img src="./doc/images/14.png" width="900">
-<img src="./doc/images/15.png" width="900">
-<img src="./doc/images/16.png" width="900">
-<img src="./doc/images/17.png" width="900">
-<img src="./doc/images/18.png" width="900">
-<img src="./doc/images/19.png" width="900">
-<img src="./doc/images/20.png" width="900">
-<img src="./doc/images/21.png" width="900">
-<img src="./doc/images/22.png" width="900">
-<img src="./doc/images/23.png" width="900">
-<img src="./doc/images/24.png" width="900">
-<img src="./doc/images/25.png" width="900">
-<img src="./doc/images/26.png" width="900">
-<img src="./doc/images/27.png" width="900">
-<img src="./doc/images/28.png" width="900">
-<img src="./doc/images/29.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/0.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/1.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/2.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/3.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/4.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/5.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/6.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/7.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/8.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/9.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/10.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/11.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/12.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/13.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/14.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/15.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/16.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/17.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/18.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/19.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/20.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/21.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/22.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/23.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/24.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/25.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/26.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/27.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/28.png" width="900">
+<img src="https://gitee.com/suwenhao/eggcms/raw/master/doc/images/29.png" width="900">
 
 ## 开始
 
